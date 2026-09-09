@@ -52,9 +52,14 @@ export const crew: CrewMember[] = [
     engine: 'Qwen3-Coder',
   },
   {
+    name: 'Vesper',
+    role: { en: 'Engineering', ru: 'Инженер', pl: 'Inżynier' },
+    engine: 'Grok 4.6',
+  },
+  {
     name: 'Robert',
     role: { en: 'Special projects', ru: 'Особые задачи', pl: 'Zadania specjalne' },
-    engine: 'Claude Opus',
+    engine: 'Claude Sonnet',
   },
   {
     name: 'Iris',
