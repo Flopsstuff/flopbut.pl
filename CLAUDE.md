@@ -32,6 +32,19 @@ do not ship anything stay off the list.
 Facts that are easy to get wrong: iOS dates back to the launch of the platform, with no
 specific year given; React Native is strictly since 2019; Android belongs in the stack too.
 
+## Brand
+
+Two colours, and only two, in the logo, the favicon and the GitHub App badge:
+
+- ink `#0b1312` - near-black with a hint of green, the background
+- patina `#5fb79b` - oxidised copper, the mark
+
+`public/logo-512.png` is patina on ink, `public/logo-512-light.png` the inverse. The source of
+truth is the token block in `src/styles/global.css` (`--ink`, `--patina`); the same values sit in
+`public/favicon.svg` and the dark `theme-color` meta in `src/layouts/Layout.astro`, so changing
+one means changing all four. The light theme darkens patina to `#0e7159` for contrast in text;
+logos keep `#5fb79b`. Do not introduce new hex values for brand surfaces.
+
 ## Commands
 
 ```bash
