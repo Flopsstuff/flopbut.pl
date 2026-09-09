@@ -1,6 +1,6 @@
 # Draft: signed-in form where people contribute content about Flop
 
-Status: **draft, nothing implemented**. Written 2026-08-08.
+Status: **draft, nothing implemented**. Written 2026-08-08, revised 2026-09-09.
 
 ## What this actually is
 
@@ -19,10 +19,12 @@ the copy and dropping abuse all happen downstream and are out of scope here.
 
 ```
 /request/
-   -> "Sign in with GitHub"     no anonymous path at all
-   -> form                      only reachable once signed in
-   -> POST /api/request         validate, then GitHub API as the user
-   -> issue authored by the user
+   -> "Sign in with GitHub"        no anonymous path at all
+   -> GET  /api/auth/login         redirect to GitHub with a state parameter
+   -> GET  /api/auth/callback      exchange the code, set the session cookie
+   -> form                         only reachable once signed in
+   -> POST /api/request            validate, then GitHub API as the user
+   -> issue in Flopsstuff/flopbut.pl, authored by the user
    -> [ agents downstream: classify, decide, publish or close ]
 ```
 
@@ -69,14 +71,37 @@ provide all three here.
 
 ## Decided
 
+**Issues land in this repository, `Flopsstuff/flopbut.pl`.** It is public with issues enabled,
+and keeping the request next to the code it may change means the downstream pull request and its
+originating issue live in one place. (Decided 2026-09-09; the catalogue repo was the alternative.)
+
 **GitHub App with user-to-server tokens, `Issues: write` scoped to one repository.**
 
 Not an OAuth App: its `public_repo` scope grants write access to every public repository the
-person owns, which is absurd for filing one issue.
+person owns, which is absurd for filing one issue. A GitHub App's user token can only do what the
+app is allowed to do *and* the user is allowed to do, and the app is installed on exactly one
+repository. Any GitHub account can open an issue in a public repository, so strangers qualify.
+
+Because it is the user-authorization flow and not app-authentication, only the **client id and
+client secret** are needed. The app's private key is never used and does not need to leave
+GitHub.
+
+**The form is only reachable after sign-in.** The alternative, form first and the issue created
+straight from the callback with a token that lives for seconds, would remove the session cookie
+entirely. Rejected: the person has to see under which name their words will be published before
+they start writing, not after.
 
 Session between sign-in and submit: **signed httpOnly cookie**, Secure, SameSite=Lax, short
-lived. No storage, and it leaves `session: false` in `astro.config.mjs` untouched. A `state`
-parameter on the OAuth round trip, checked on callback, against CSRF.
+lived (one hour is plenty; the GitHub token itself expires after eight). HMAC via WebCrypto with
+a `SESSION_SECRET`, so there is no storage and `session: false` in `astro.config.mjs` stays
+untouched. This matters: the Cloudflare deploy token has no KV permission, and nothing here
+should need one. A `state` parameter on the OAuth round trip, kept in its own short-lived cookie
+and checked on callback, against CSRF.
+
+**Rate limit without storage.** With no KV there is no counter to keep. Before creating an
+issue, ask GitHub instead: `GET /search/issues?q=repo:Flopsstuff/flopbut.pl author:<login>
+created:><one hour ago>` with the user's own token, and refuse above a small cap. GitHub's own
+abuse limits sit behind that as the backstop.
 
 ## The issue is a contract
 
@@ -94,18 +119,61 @@ Two things only this side can get right:
 
 ## What else belongs to this side
 
-- Rate limit **per account**, which sign-in makes both possible and meaningful.
-- Field validation and length caps.
+- Field validation and length caps, same style as `src/pages/api/contact.ts`.
 - Honest failures: no success screen if the GitHub call failed, and keep their text in the form.
+- A `User-Agent` header on every GitHub API call; GitHub rejects requests without one.
 - No anonymous fallback path, including no "or email me instead" that quietly restores it.
+- Secrets: `.env` locally, placeholders documented in `.env.example`. In production
+  they are repository secrets on GitHub, and `deploy.yml` uploads them to the worker on every
+  deploy through the `secrets` input of `wrangler-action`. One set of names everywhere:
+  `GH_APP_CLIENT_ID`, `GH_APP_CLIENT_SECRET`, `SESSION_SECRET`. The `GH_` prefix rather than
+  `GITHUB_` because GitHub forbids the latter for its secrets. GitHub is the single source of
+  truth; nothing is set with `wrangler secret put` by hand.
+
+## GitHub App: registration checklist
+
+Manual, done by the owner. `Flopsstuff` is an organization and the app should be created under
+it, so it starts at **Organization settings -> Developer settings -> GitHub Apps -> New GitHub
+App**, not under the personal account.
+
+1. **Name**: globally unique on GitHub, shown on the authorization screen. Something like
+   `flopbut.pl requests`.
+2. **Homepage URL**: `https://flopbut.pl/`.
+3. **Callback URLs**, two of them:
+   `https://flopbut.pl/api/auth/callback` and `http://localhost:4321/api/auth/callback` for
+   `astro dev`.
+4. **Expire user authorization tokens**: leave on. Tokens then die after eight hours, well after
+   the cookie does, and the refresh token is simply never used.
+5. **Request user authorization (OAuth) during installation**: off. Installation is a one-time
+   act by the owner; users authorize from the site.
+6. **Enable Device Flow**: off.
+7. **Webhook**: untick *Active*. Nothing here listens; leaving it on forces a webhook URL.
+8. **Repository permissions**: *Issues* -> **Read and write**. *Metadata* becomes read-only on
+   its own. Nothing else, and no account permissions at all.
+9. **Where can this GitHub App be installed?**: *Only on this account*.
+10. Create, then on the app page: copy the **Client ID** and **Generate a new client secret**;
+    the secret is shown once. Skip *Generate a private key*.
+11. **Install App** in the left menu -> `Flopsstuff` -> *Only select repositories* ->
+    `flopbut.pl`.
+12. Put the secrets in `.env`, then `gh secret set -f .env` once: `GH_APP_CLIENT_ID`,
+    `GH_APP_CLIENT_SECRET`, `SESSION_SECRET` (the last one from `openssl rand -hex 32`).
+    The next deploy uploads them to the worker.
+    Done 2026-09-09.
+
+**Before writing any page code, prove the model with a second account.** Sign in with an
+account that is not a member of `Flopsstuff`, exchange the code by hand, and `POST
+/repos/Flopsstuff/flopbut.pl/issues` with that token. If that works, everything else is
+plumbing. If it does not, the assumption that non-collaborators can file issues through the app
+was wrong and the design has to change before anything is built on it.
 
 ## Suggested order of work
 
-1. Register the GitHub App, install it on the target repository, store the secrets.
+1. Register and install the GitHub App, store the secrets, run the second-account test above.
 2. `/request/` page in three locales: signed-out and signed-in states, and the sentence about
    publication.
-3. OAuth round trip: authorize, callback, `state` check, session cookie.
-4. `POST /api/request`: validation, template rendering with escaping, issue creation as the user.
+3. OAuth round trip: `/api/auth/login`, `/api/auth/callback`, `state` check, session cookie.
+4. `POST /api/request`: validation, the rate-limit query, template rendering with escaping,
+   issue creation as the user.
 
 Four steps, no LLM on this side, and nothing here depends on the downstream design being settled.
 
@@ -113,6 +181,5 @@ Four steps, no LLM on this side, and nothing here depends on the downstream desi
 
 - **What does the form ask?** Probably one free text field plus how the person knows Flop, given
   that agents classify rather than the submitter picking a category. Still undecided.
-- Which repository receives the issues: this one, or the catalogue repo.
 - Removal: if a contributor asks for their entry to be taken down, what is the path?
 - Does a published contribution link back to its issue, so the provenance is checkable?

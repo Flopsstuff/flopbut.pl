@@ -44,6 +44,17 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # Worker secrets for the request form, uploaded from the repository secrets of the
+          # same name before the deploy. GH_ rather than GITHUB_ because GitHub forbids that
+          # prefix for its secrets. To expose a new one, add it here and in env below.
+          secrets: |
+            GH_APP_CLIENT_ID
+            GH_APP_CLIENT_SECRET
+            SESSION_SECRET
+        env:
+          GH_APP_CLIENT_ID: ${{ secrets.GH_APP_CLIENT_ID }}
+          GH_APP_CLIENT_SECRET: ${{ secrets.GH_APP_CLIENT_SECRET }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
 
       # Without this the edge can keep serving the previous HTML for a few minutes, and it
       # expires page by page: one locale updates while another still shows the old build.

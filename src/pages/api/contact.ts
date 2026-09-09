@@ -6,7 +6,7 @@ import type { APIRoute } from 'astro';
  *
  * It is deliberately dormant: with no delivery secrets configured it answers 503 and nothing
  * else in the site depends on it. To switch the contact form on, set the secrets listed in
- * `.dev.vars.example` (`wrangler secret put …` for production) and add the form markup.
+ * `.env.example` (and the repository secrets for production) and add the form markup.
  * No code changes needed here.
  */
 export const prerender = false;
