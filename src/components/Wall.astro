@@ -3,6 +3,8 @@ import type { Locale } from '../config.ts';
 import { localizedPath, useTranslations } from '../i18n/utils.ts';
 import Footer from './Footer.astro';
 import Header from './Header.astro';
+import FiveCats from './wall/FiveCats.astro';
+import WallEntry from './wall/WallEntry.astro';
 
 interface Props {
   locale: Locale;
@@ -25,8 +27,16 @@ const t = useTranslations(locale);
       <span class="button-arrow" aria-hidden="true">→</span>
     </a>
 
-    {/* No entries exist yet; the list goes here once the first one is published. */}
-    <p class="label empty">{t.wall.empty}</p>
+    {/*
+      Oldest first, newest at the bottom, one <WallEntry> per accepted request. A new
+      contribution is a component under wall/ plus its strings in the dictionaries; nothing
+      already on the wall moves to make room.
+    */}
+    <ul class="entries">
+      <WallEntry locale={locale} author="katyoid" issue={11} date="2026-09-13">
+        <FiveCats locale={locale} />
+      </WallEntry>
+    </ul>
   </div>
 </main>
 
@@ -46,9 +56,11 @@ const t = useTranslations(locale);
     margin-top: 2.5rem;
   }
 
-  .empty {
-    margin-top: clamp(3rem, 2rem + 4vw, 5rem);
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--line);
+  .entries {
+    list-style: none;
+    margin: clamp(3rem, 2rem + 4vw, 5rem) 0 0;
+    padding: 0;
+    display: grid;
+    gap: clamp(1.5rem, 1rem + 2vw, 2.5rem);
   }
 </style>

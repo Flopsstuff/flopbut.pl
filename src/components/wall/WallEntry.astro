@@ -1,0 +1,54 @@
+---
+import { type Locale, REPO } from '../../config.ts';
+import { useTranslations } from '../../i18n/utils.ts';
+
+interface Props {
+  locale: Locale;
+  /** GitHub login of the person who asked for this entry. The entry stays theirs. */
+  author: string;
+  /** Issue the request arrived as. */
+  issue: number;
+  /** ISO date the request was filed. */
+  date: string;
+}
+
+const { locale, author, issue, date } = Astro.props;
+const t = useTranslations(locale);
+
+const issueUrl = `https://github.com/${REPO.owner}/${REPO.name}/issues/${issue}`;
+const filed = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(date));
+---
+
+<li class="entry">
+  <slot />
+
+  <p class="label credit">
+    <span>{t.wall.entry.by} <a href={`https://github.com/${author}`}>@{author}</a></span>
+    <span aria-hidden="true">·</span>
+    <a href={issueUrl}>{t.wall.entry.request} #{issue}</a>
+    <span aria-hidden="true">·</span>
+    <time datetime={date}>{filed}</time>
+  </p>
+</li>
+
+<style>
+  .entry {
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  }
+
+  .credit {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.6rem;
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .credit a {
+    color: var(--patina);
+  }
+</style>

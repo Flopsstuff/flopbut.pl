@@ -1,0 +1,163 @@
+---
+import type { Locale } from '../../config.ts';
+import { useTranslations } from '../../i18n/utils.ts';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const cats = t.wall.entries.fiveCats;
+---
+
+<h2 class="entry-title">{cats.title}</h2>
+
+<svg class="defs" aria-hidden="true" focusable="false">
+  <defs>
+    {/*
+      One cat, drawn once and stamped five times. Fill is the card colour rather than none,
+      so the head hides the ear roots and the open top of the body instead of crossing them.
+    */}
+    <g id="wall-cat">
+      <path fill="none" d="M39 41 L34 16 L53 27" />
+      <path fill="none" d="M81 41 L86 16 L68 27" />
+      <path d="M44 63C33 74 27 92 28 108c0 5 4 8 9 8h46c5 0 8-3 9-8 1-16-5-34-16-45" />
+      <path fill="none" d="M92 112c16 2 22-14 14-26-3-5-8-5-10-1" />
+      <circle cx="60" cy="48" r="22" />
+      <circle cx="51" cy="47" r="2.6" fill="currentColor" stroke="none" />
+      <circle cx="69" cy="47" r="2.6" fill="currentColor" stroke="none" />
+      <path d="M57 56h6l-3 4z" fill="currentColor" stroke="none" />
+      <path fill="none" d="M60 60c0 4-4 5-6 2M60 60c0 4 4 5 6 2" />
+      <path fill="none" d="M52 58 34 55M52 62 35 65M68 58 86 55M68 62 85 65" />
+      <path fill="none" d="M45 116c0-6 8-6 8 0M67 116c0-6 8-6 8 0" />
+    </g>
+  </defs>
+</svg>
+
+<ul class="row">
+  <li>
+    <svg class="cat" viewBox="0 0 120 136" aria-hidden="true" focusable="false">
+      <use href="#wall-cat" />
+      <path fill="none" d="M86 90c10-2 15-10 13-18" />
+      <circle cx="99" cy="69" r="4.5" />
+      <path fill="none" d="M99 66 110 46" />
+      <path class="trail" fill="none" d="M18 88C6 76 10 54 24 42" />
+      <circle cx="18" cy="88" r="3.4" fill="currentColor" stroke="none" />
+      <circle cx="13" cy="64" r="3.4" fill="currentColor" stroke="none" />
+      <circle cx="24" cy="42" r="3.4" fill="currentColor" stroke="none" />
+    </svg>
+    <p class="label caption">{cats.cats.agents}</p>
+  </li>
+
+  <li>
+    <svg class="cat" viewBox="0 0 120 136" aria-hidden="true" focusable="false">
+      <use href="#wall-cat" />
+      <rect x="45" y="76" width="30" height="40" rx="5" />
+      <path fill="none" d="M52 86h16M52 95h11M52 104h16" />
+      <circle cx="42" cy="96" r="5.5" />
+      <circle cx="78" cy="96" r="5.5" />
+    </svg>
+    <p class="label caption">{cats.cats.app}</p>
+  </li>
+
+  <li>
+    <svg class="cat" viewBox="0 0 120 136" aria-hidden="true" focusable="false">
+      <use href="#wall-cat" />
+      <path fill="none" d="M31 90c-6 0-10 4-12 9" />
+      <path class="grip" fill="none" d="M4 88 15 98" />
+      <path fill="none" d="M18 102 28 110" />
+      <circle cx="17" cy="101" r="5" />
+      <path fill="none" d="M32 105l3-4M34 111h5M31 116l2 4" />
+      <rect x="24" y="112" width="34" height="12" rx="2" />
+      <circle cx="32" cy="118" r="1.8" fill="currentColor" stroke="none" />
+      <circle cx="41" cy="118" r="1.8" fill="currentColor" stroke="none" />
+      <circle cx="50" cy="118" r="1.8" fill="currentColor" stroke="none" />
+    </svg>
+    <p class="label caption">{cats.cats.solder}</p>
+  </li>
+
+  <li>
+    <svg class="cat" viewBox="0 0 120 136" aria-hidden="true" focusable="false">
+      <use href="#wall-cat" />
+      <path d="M8 106C10 122 30 128 60 128s50-6 52-22z" />
+      <path fill="none" d="M22 106 22 22" />
+      <path d="M22 26 22 102 3 102z" />
+      <path fill="none" d="M4 133c8-5 16 5 24 0s16 5 24 0 16 5 24 0 16 5 24 0" />
+    </svg>
+    <p class="label caption">{cats.cats.sail}</p>
+  </li>
+
+  <li>
+    <svg class="cat" viewBox="0 0 120 136" aria-hidden="true" focusable="false">
+      <use href="#wall-cat" />
+      <path fill="none" d="M40 92C30 90 22 82 22 70" />
+      <circle cx="22" cy="67" r="4.5" />
+      <path fill="none" d="M22 63 24 51" />
+      <path d="M22 55c-5-3-8 1-8 1s4 4 8-1z" />
+      <circle cx="25" cy="45" r="6" />
+      <path fill="none" d="M25 48c-3 0-4-3-2-4s5 1 4 4" />
+      <ellipse cx="101" cy="30" rx="4.5" ry="3.5" transform="rotate(-20 101 30)" fill="currentColor" stroke="none" />
+      <path fill="none" d="M105 29V13c5 2 7 7 4 11" />
+      <ellipse cx="108" cy="62" rx="3.6" ry="2.8" transform="rotate(-20 108 62)" fill="currentColor" stroke="none" />
+      <path fill="none" d="M111 61V48" />
+    </svg>
+    <p class="label caption">{cats.cats.tango}</p>
+  </li>
+</ul>
+
+<style>
+  .entry-title {
+    font-size: var(--step-2);
+  }
+
+  .defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .row {
+    list-style: none;
+    margin: clamp(1.5rem, 1rem + 2vw, 2.5rem) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+    gap: clamp(1.25rem, 0.75rem + 2vw, 2rem);
+  }
+
+  .row > li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .cat {
+    width: 100%;
+    max-width: 8.5rem;
+    height: auto;
+    color: var(--patina);
+    fill: var(--surface);
+    stroke: currentColor;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* The fleet the first cat is herding: a path it has already been down. */
+  .trail {
+    stroke-dasharray: 2 6;
+    opacity: 0.6;
+  }
+
+  .grip {
+    stroke-width: 5.5;
+  }
+
+  .caption {
+    text-align: center;
+    text-transform: none;
+  }
+</style>
