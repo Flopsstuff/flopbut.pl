@@ -204,11 +204,15 @@ App**, not under the personal account.
     The next deploy uploads them to the worker.
     Done 2026-09-09.
 
-**Prove the model with a second account.** Sign in with an account that is not a member of
-`Flopsstuff` and submit the form. If an issue appears, the model holds. If it does not, the
-assumption that non-collaborators can file issues through the app was wrong and the design has
-to change. There was no second account to hand on 2026-09-13, so the flow was built and tested
-with the owner's account only; this check is still owed.
+**Prove the model with a second account. This gates the public launch.** Sign in with an
+account that is not a member of `Flopsstuff` and submit the form on the deployed site. If an
+issue appears, authored by that account and stamped with the app, the model holds. If GitHub
+refuses, the form shows "GitHub did not accept the note" with the text kept and the log carries
+the status and GitHub's message (`[wall] GitHub POST ... -> 403: ...`); then the assumption that
+non-collaborators can file issues through the app was wrong and the design has to change before
+the wall is linked or announced anywhere. There was no second account to hand on 2026-09-13, so
+the flow was built and tested with the owner's account only. Record the result here, with the
+date and the issue number, when the test is done.
 
 ## Suggested order of work
 
