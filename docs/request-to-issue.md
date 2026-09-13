@@ -29,7 +29,9 @@ are the only server-rendered part of the site.
 ## Scope
 
 This side **ends when the issue exists**. Classification, deciding what goes on the site, writing
-the copy and dropping abuse all happen downstream and are out of scope here.
+the copy and dropping abuse all happen downstream and are out of scope here. The one piece of
+downstream this document does record is moderation, below, because it acts as the same GitHub
+App and changed a decision made here.
 
 ```
 /wall/
@@ -43,8 +45,30 @@ the copy and dropping abuse all happen downstream and are out of scope here.
    -> issue in Flopsstuff/flopbut.pl, authored by the user
    -> /request/?sent=N             thanks, with a link to the issue
    (  POST /api/auth/logout        drops the cookie; www and workers.dev redirect to the apex  )
-   -> [ agents downstream: classify, decide, publish or close ]
+   -> label-wall.yml: label wall, PUT the issue to the webhook
+   -> moderation: safe / unsafe / needs-review, as the app          (see "Moderation")
+   -> [ agents downstream: take open wall + safe issues, decide, publish ]
 ```
+
+## Moderation
+
+The automation behind the webhook runs every new wall issue through a content-safety model with
+a wall-specific policy: nothing that removes or blanks existing content, nothing that goes after
+a person, nothing that tells the agents to break their rules. It then acts on the issue **as the
+flopbut-pl GitHub App**, so GitHub shows `flopbut-pl[bot]` and not the owner:
+
+- **safe**: label `safe`. Downstream agents only pick up issues that are open and carry both
+  `wall` and `safe`, so they never race the check.
+- **unsafe**: a comment in the contributor's locale saying the request was closed and that
+  replying is how to dispute it, then label `unsafe` and close as *not planned*. No lock: a
+  non-collaborator cannot reopen an issue, so a reply is their only way to reach the owner when
+  the model is wrong. The comment ends with a hidden `<!-- wall-moderation v1 ... -->` marker
+  carrying the model's categories.
+- **no verdict** (the model ran out of tokens or answered off format): label `needs-review` and
+  leave the issue open for a person.
+
+The labels exist in the repository (created 2026-09-13). Where the automation runs and what it is
+built with is deliberately not written down here.
 
 ## Three consequences of "other people write the site"
 
@@ -100,9 +124,14 @@ person owns, which is absurd for filing one issue. A GitHub App's user token can
 app is allowed to do *and* the user is allowed to do, and the app is installed on exactly one
 repository. Any GitHub account can open an issue in a public repository, so strangers qualify.
 
-Because it is the user-authorization flow and not app-authentication, only the **client id and
-client secret** are needed. The app's private key is never used and does not need to leave
-GitHub.
+Because it is the user-authorization flow and not app-authentication, the form only needs the
+**client id and client secret**; the site never holds the app's private key.
+
+Revised 2026-09-13: moderation acts as the app itself, which does need the private key. It lives
+only in the moderation automation's own credential store, never in this repository, its secrets
+or the worker. Each run signs a short JWT, asks for an installation token and narrows that token
+to `issues: write` on this one repository, so the key's reach is closing and labelling issues
+here and nothing else.
 
 **The form is only reachable after sign-in.** The alternative, form first and the issue created
 straight from the callback with a token that lives for seconds, would remove the session cookie
@@ -196,7 +225,9 @@ App**, not under the personal account.
    its own. Nothing else, and no account permissions at all.
 9. **Where can this GitHub App be installed?**: *Only on this account*.
 10. Create, then on the app page: copy the **Client ID** and **Generate a new client secret**;
-    the secret is shown once. Skip *Generate a private key*.
+    the secret is shown once. *Generate a private key* was skipped at first; moderation needed
+    one on 2026-09-13 (see "Moderation"), and the `.pem` went straight into the automation's
+    credential store.
 11. **Install App** in the left menu -> `Flopsstuff` -> *Only select repositories* ->
     `flopbut.pl`.
 12. Put the secrets in `.env`, then `gh secret set -f .env` once: `GH_APP_CLIENT_ID`,
