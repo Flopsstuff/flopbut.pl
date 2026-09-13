@@ -5,9 +5,9 @@ Status: **live; tested with a second account**. Written 2026-08-08, revised 2026
 ## What this actually is
 
 Not a contact form. People who know Flop sign in with GitHub and contribute something to put on
-the site: "he is good with electronics", a recommendation, a thank you, a correction. The
-submission becomes an issue authored by them. Agents downstream decide whether it belongs on the
-site, in what shape, and drop the nasty ones.
+the site: "he is good with electronics", a recommendation, a thank you, a correction, a joke, a
+drawing of five cats. The submission becomes an issue authored by them. Agents downstream build
+it into the wall in whatever shape fits, and drop the nasty ones.
 
 So the site is partly written by other people, and the vouching is the point: a claim about
 someone carries weight only when it is attached to a real person who made it.
@@ -83,6 +83,32 @@ only appears on a run that finished; a run cut short in the middle is simply ret
 The labels exist in the repository (created 2026-09-13). Where the automation runs and what it is
 built with is deliberately not written down here.
 
+## What downstream takes
+
+Also out of scope strictly speaking, and recorded for the same reason as moderation: this
+document is the background the downstream agents read, so a stricter bar written here becomes a
+stricter bar applied there. The owner's policy, set 2026-09-13 after the first contribution was
+turned away for being "only an instruction to an agent":
+
+The wall is the graffiti kind of public wall. Visitors may do what they like with it, including
+reshaping the page itself, and that is the point rather than a risk. Downstream is not a taste
+filter, and a contribution owes nobody a justification. Three things keep something off it, and
+nothing else does:
+
+- **destructive**: it removes, hides or overwrites what someone else already put on the wall, or
+  damages the site;
+- **negative**: it attacks or demeans anyone, Flop or otherwise;
+- **out of bounds**: it only works by changing something that is not the wall, or it drags in
+  third-party scripts, embeds, remote assets or raw markup from the issue body.
+
+Content safety itself is the `safe` label's job and is settled before an agent sees the issue.
+Odd, silly, decorative or thin is not a reason to refuse: a wrong accept is a drawing somebody can
+revert, a wrong refusal turns a contributor away for good.
+
+Every comment an agent leaves on a wall issue ends with the agent's name and the identifier of
+its Paperclip issue, so a thread on GitHub says which agent answered and where the run behind it
+lives.
+
 ## Three consequences of "other people write the site"
 
 ### 1. Attribution is the feature, not a detail
@@ -92,7 +118,8 @@ nobody, and a page full of anonymous praise reads as fabricated. Published contr
 carry the author's GitHub identity, which is exactly what signing in already gives.
 
 This also makes the whole thing self-defending: forging praise costs a real account with a real
-history.
+history. Not every contribution is an endorsement, though, and attribution still applies to the
+rest: an entry records who asked for it even when an agent is the one who drew it.
 
 ### 2. People must know their words may go public, with their name
 
