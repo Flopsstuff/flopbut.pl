@@ -19,6 +19,11 @@ jobs:
         with:
           lfs: true
 
+      # Every image has to arrive as an LFS pointer. A commit made where git-lfs is not installed
+      # stores the raw file instead, and the deploy would still work, so this is where it is caught.
+      - name: Images are in Git LFS
+        run: git lfs fsck --pointers
+
       - uses: pnpm/action-setup@v6
 
       - uses: actions/setup-node@v7

@@ -90,6 +90,10 @@ A pull request that changes anything a visitor can see carries a screenshot of t
 have to build the branch to find out. How to take one and attach it:
 [docs/visual-proof.md](docs/visual-proof.md).
 
+Raster images (PNG, JPEG, GIF, WebP, AVIF, ICO and the rest listed in `.gitattributes`) are stored
+in Git LFS, so install `git-lfs` before committing one. A commit made without it stores the raw
+file instead of a pointer, and CI fails the pull request on it. SVG stays plain text.
+
 ## Deployment
 
 Pushes to `main` build and deploy through `.github/workflows/deploy.yml`. Repository secrets:
