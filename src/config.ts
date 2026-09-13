@@ -10,6 +10,9 @@ export type Locale = (typeof LOCALES)[number];
 /** The project catalogue. */
 export const PROJECTS_URL = 'https://stuff.flopbut.pl';
 
+/** Where the wall's requests land as issues (docs/request-to-issue.md). */
+export const REPO = { owner: 'Flopsstuff', name: 'flopbut.pl' } as const;
+
 export const LINKS = {
   /** Organisation account - the project catalogue. Personal account is @Fl0p. */
   github: 'https://github.com/Flopsstuff',
