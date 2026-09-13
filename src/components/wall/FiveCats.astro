@@ -122,12 +122,16 @@ const cats = t.wall.entries.fiveCats;
     list-style: none;
     margin: clamp(1.5rem, 1rem + 2vw, 2.5rem) 0 0;
     padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: clamp(1.25rem, 0.75rem + 2vw, 2rem);
   }
 
+  /* Grow to the cap, then let justify-content centre the remainder, so a short last row is not orphaned left. */
   .row > li {
+    flex: 1 1 7rem;
+    max-width: 8.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -139,7 +143,7 @@ const cats = t.wall.entries.fiveCats;
     max-width: 8.5rem;
     height: auto;
     color: var(--patina);
-    fill: var(--surface);
+    fill: var(--entry-bg, var(--surface));
     stroke: currentColor;
     stroke-width: 2.4;
     stroke-linecap: round;
@@ -159,5 +163,6 @@ const cats = t.wall.entries.fiveCats;
   .caption {
     text-align: center;
     text-transform: none;
+    letter-spacing: 0.02em;
   }
 </style>

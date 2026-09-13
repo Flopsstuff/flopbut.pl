@@ -10,45 +10,89 @@ interface Props {
   issue: number;
   /** ISO date the request was filed. */
   date: string;
+  /** Columns out of six this entry claims on the wall. A drawing takes six, a note takes three. */
+  span?: 3 | 4 | 6;
 }
 
-const { locale, author, issue, date } = Astro.props;
+const { locale, author, issue, date, span = 6 } = Astro.props;
 const t = useTranslations(locale);
 
 const issueUrl = `https://github.com/${REPO.owner}/${REPO.name}/issues/${issue}`;
 const filed = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(date));
 ---
 
-<li class="entry">
+<li class="entry" style={`--span: ${span}`}>
   <slot />
 
-  <p class="label credit">
-    <span>{t.wall.entry.by} <a href={`https://github.com/${author}`}>@{author}</a></span>
-    <span aria-hidden="true">·</span>
-    <a href={issueUrl}>{t.wall.entry.request} #{issue}</a>
-    <span aria-hidden="true">·</span>
-    <time datetime={date}>{filed}</time>
+  <p class="credit">
+    <span class="who">
+      <span class="label prefix">{t.wall.entry.by}</span>
+      <a class="handle" href={`https://github.com/${author}`}>@{author}</a>
+    </span>
+    <span class="label meta">
+      <a href={issueUrl}>{t.wall.entry.request} #{issue}</a>
+      <time datetime={date}>{filed}</time>
+    </span>
   </p>
 </li>
 
 <style>
   .entry {
-    background-color: var(--surface);
+    /* The contribution fills against this to mask its own overlaps; it must match the card. */
+    --entry-bg: var(--surface-raised);
+
+    background-color: var(--entry-bg);
     border: 1px solid var(--line);
     border-radius: 0.75rem;
     padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
   }
 
+  /* Must match the breakpoint where Wall.astro turns .entries into six columns. */
+  @media (min-width: 52rem) {
+    .entry {
+      grid-column: span var(--span, 6);
+    }
+  }
+
   .credit {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.35rem 0.6rem;
-    margin-top: 2rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--line);
+    align-items: baseline;
+    gap: 0.35rem 1.25rem;
+    margin-top: 1.75rem;
   }
 
-  .credit a {
+  .who {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .prefix {
+    color: var(--muted);
+  }
+
+  /* A person's handle is not an eyebrow: no uppercasing, no tracking, and it holds the text colour. */
+  .handle {
+    font-size: var(--step-0);
+    color: var(--text);
+    text-decoration-color: var(--patina);
+  }
+
+  .meta {
+    display: flex;
+    gap: 0.6rem;
+    color: var(--muted);
+  }
+
+  .meta a {
     color: var(--patina);
+  }
+
+  /* Attached to the date, not a standalone span, so a wrap never strands the separator. */
+  .meta time::before {
+    content: '·';
+    margin-inline-end: 0.6rem;
   }
 </style>

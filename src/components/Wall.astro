@@ -61,6 +61,14 @@ const t = useTranslations(locale);
     margin: clamp(3rem, 2rem + 4vw, 5rem) 0 0;
     padding: 0;
     display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
     gap: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  }
+
+  @media (min-width: 52rem) {
+    .entries {
+      grid-template-columns: repeat(6, 1fr);
+    }
   }
 </style>
