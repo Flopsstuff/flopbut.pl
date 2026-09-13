@@ -13,6 +13,13 @@ export const PROJECTS_URL = 'https://stuff.flopbut.pl';
 /** Where the wall's requests land as issues (docs/request-to-issue.md). */
 export const REPO = { owner: 'Flopsstuff', name: 'flopbut.pl' } as const;
 
+/**
+ * The wall's GitHub App. Public (GET /apps/flopbut-pl); GitHub stamps it on every issue the
+ * form creates as `performed_via_github_app`, which is how the form's issues are told apart
+ * from anything else a person files. Same value as APP_ID in .github/workflows/label-wall.yml.
+ */
+export const APP_ID = 4885332;
+
 /** GitHub logins the wall's rate limit does not apply to: the owner, testing his own form. */
 export const RATE_LIMIT_EXEMPT: readonly string[] = ['Fl0p'];
 

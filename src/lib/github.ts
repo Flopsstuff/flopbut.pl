@@ -1,4 +1,4 @@
-import { type Locale, REPO, SITE_URL } from '../config.ts';
+import { APP_ID, type Locale, REPO, SITE_URL } from '../config.ts';
 
 /** Everything that talks to GitHub, plus the issue template. No secrets are read here. */
 
@@ -78,10 +78,11 @@ export async function fetchViewer(token: string): Promise<{ login: string } | nu
 export type CountResult = { ok: true; count: number } | { ok: false; status: number };
 
 /**
- * Issues this login opened in the repository since `since`. The list endpoint rather than
- * search: it is real time, and search with a user token needs `is:issue` and has its own,
- * much smaller, rate limit. The status comes back on failure so a 401 (token revoked, cookie
- * still alive) can end the session rather than read as a GitHub hiccup.
+ * Wall issues this login opened in the repository since `since`: only those GitHub stamped with
+ * the wall's app, so a bug report the same person files by hand does not spend their quota.
+ * The list endpoint rather than search: it is real time, and search with a user token needs
+ * `is:issue` and has its own, much smaller, rate limit. The status comes back on failure so a
+ * 401 (token revoked, cookie still alive) can end the session rather than read as a hiccup.
  */
 export async function countRecentIssues(
   token: string,
@@ -102,6 +103,8 @@ export async function countRecentIssues(
     (item) =>
       isRecord(item) &&
       !('pull_request' in item) &&
+      isRecord(item.performed_via_github_app) &&
+      item.performed_via_github_app.id === APP_ID &&
       typeof item.created_at === 'string' &&
       Date.parse(item.created_at) >= cutoff,
   ).length;
