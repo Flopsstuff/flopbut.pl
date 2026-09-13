@@ -13,6 +13,9 @@ node_modules/
 .env.*
 !.env.example
 
+# review screenshots, published to the shots branch rather than committed here
+.review-shots/
+
 # logs
 *.log
 npm-debug.log*
