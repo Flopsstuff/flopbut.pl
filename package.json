@@ -12,7 +12,6 @@
     "preview": "wrangler dev",
     "deploy": "astro build && wrangler deploy",
     "shot": "node scripts/shot.mjs",
-    "publish-shot": "node scripts/publish-shot.mjs",
     "check": "astro check",
     "lint": "biome check .",
     "format": "biome check --write .",

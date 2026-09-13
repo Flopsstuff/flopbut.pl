@@ -69,13 +69,12 @@ what all three locales need.
 ## Commands
 
 ```bash
-pnpm dev           # dev server at localhost:4321, runs as a daemon
-pnpm build         # production build into dist/
-pnpm preview       # run the built site on the real workerd runtime
-pnpm verify        # lint + type check + build, same as CI
-pnpm deploy        # build and push to Cloudflare
-pnpm shot          # full-page screenshot of a running page
-pnpm publish-shot  # put a screenshot on the shots branch, print its markdown
+pnpm dev       # dev server at localhost:4321, runs as a daemon
+pnpm build     # production build into dist/
+pnpm preview   # run the built site on the real workerd runtime
+pnpm verify    # lint + type check + build, same as CI
+pnpm deploy    # build and push to Cloudflare
+pnpm shot      # full-page screenshot of a running page
 ```
 
 The dev server is a daemon: `pnpm exec astro dev stop` stops it, `pnpm exec astro dev logs`
@@ -88,8 +87,12 @@ and every push to `main` deploys, so nothing goes to `main` directly.
 
 A pull request that changes anything a visitor can see carries a screenshot of the result under a
 `## Visual proof` heading. Code alone does not show what a page looks like, and nobody should
-have to build the branch to find out. How to take one and where it is hosted:
+have to build the branch to find out. How to take one and attach it:
 [docs/visual-proof.md](docs/visual-proof.md).
+
+Raster images (PNG, JPEG, GIF, WebP, AVIF, ICO and the rest listed in `.gitattributes`) are stored
+in Git LFS, so install `git-lfs` before committing one. A commit made without it stores the raw
+file instead of a pointer, and CI fails the pull request on it. SVG stays plain text.
 
 ## Deployment
 
