@@ -93,7 +93,9 @@ export async function countRecentIssues(
   url.searchParams.set('creator', login);
   url.searchParams.set('state', 'all');
   url.searchParams.set('since', since.toISOString());
-  url.searchParams.set('per_page', '10');
+  /* GitHub's maximum. Pull requests share this list and are dropped below; with ten a burst of
+     the author's own PRs could push the wall issue off the page and open the cap. */
+  url.searchParams.set('per_page', '100');
   const response = await gh(url.href, token);
   if (!response.ok) return { ok: false, status: response.status };
   const data: unknown = await response.json();
