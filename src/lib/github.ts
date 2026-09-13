@@ -4,6 +4,8 @@ import { APP_ID, type Locale, REPO, SITE_URL } from '../config.ts';
 
 const API = 'https://api.github.com';
 const USER_AGENT = 'flopbut.pl wall (+https://flopbut.pl/wall/)';
+/** A stalled GitHub must not hold the callback or the form open until the runtime gives up. */
+const TIMEOUT_MS = 10_000;
 
 /** GitHub's own rule for logins; the title and the session trust nothing looser. */
 export const LOGIN_RE = /^[A-Za-z0-9-]{1,39}$/;
@@ -24,7 +26,7 @@ async function gh(url: string, token: string, init: RequestInit = {}): Promise<R
   headers.set('x-github-api-version', '2022-11-28');
   headers.set('user-agent', USER_AGENT);
   headers.set('authorization', `Bearer ${token}`);
-  const response = await fetch(url, { ...init, headers });
+  const response = await fetch(url, { ...init, headers, signal: AbortSignal.timeout(TIMEOUT_MS) });
   if (!response.ok) {
     /* The status and GitHub's own message are the whole diagnosis; the token never appears. */
     const detail = (await response.clone().text()).slice(0, 300);
@@ -60,6 +62,7 @@ export async function exchangeCode(input: {
       code: input.code,
       redirect_uri: input.redirectUri,
     }),
+    signal: AbortSignal.timeout(TIMEOUT_MS),
   });
   if (!response.ok) return null;
   const data: unknown = await response.json();
