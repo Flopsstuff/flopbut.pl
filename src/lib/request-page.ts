@@ -15,8 +15,9 @@ import { clearCookie, readSession, SESSION_COOKIE } from './session.ts';
 export const LIMITS = {
   text: { min: 20, max: 4000 },
   relation: 120,
-  /** Issues per author per hour, counted on GitHub itself: there is no storage here. */
-  perHour: 3,
+  /** Issues per author per day, counted on GitHub itself: there is no storage here. */
+  perDay: 1,
+  windowMs: 24 * 60 * 60 * 1000,
 } as const;
 
 export type SignedOutError = 'auth' | 'expired';
@@ -72,10 +73,10 @@ export async function handleRequest(
     let number: number;
     try {
       if (!RATE_LIMIT_EXEMPT.includes(session.login)) {
-        const since = new Date(Date.now() - 60 * 60 * 1000);
+        const since = new Date(Date.now() - LIMITS.windowMs);
         const recent = await countRecentIssues(session.token, session.login, since);
         if (!recent.ok) return recent.status === 401 ? expired() : signedIn(fields, 'github', 502);
-        if (recent.count >= LIMITS.perHour) return signedIn(fields, 'rateLimited', 429);
+        if (recent.count >= LIMITS.perDay) return signedIn(fields, 'rateLimited', 429);
       }
 
       const issue = renderIssue({ login: session.login, locale, ...fields });

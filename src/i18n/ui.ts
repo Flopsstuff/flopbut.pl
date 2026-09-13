@@ -168,7 +168,7 @@ const en = {
       form: 'That did not look like a form submission. Try again.',
       text: 'The note runs between 20 and 4000 characters.',
       relation: 'Keep the "how do you know Flop" line under 120 characters.',
-      rateLimited: 'Three notes an hour is the limit. Come back a little later.',
+      rateLimited: 'One note a day is the limit. Come back tomorrow.',
       github: 'GitHub did not accept the note. Your text is still here; try again in a minute.',
     },
     sent: {
@@ -350,7 +350,7 @@ const ru: Dictionary = {
       form: 'Это не похоже на отправку формы. Попробуйте ещё раз.',
       text: 'Запись должна быть от 20 до 4000 знаков.',
       relation: 'Строка «откуда знаете Флопа» - не длиннее 120 знаков.',
-      rateLimited: 'Не больше трёх записей в час. Загляните чуть позже.',
+      rateLimited: 'Не больше одной записи в сутки. Загляните завтра.',
       github: 'GitHub не принял запись. Текст на месте; попробуйте через минуту.',
     },
     sent: {
@@ -525,7 +525,7 @@ const pl: Dictionary = {
       form: 'To nie wyglądało na wysłanie formularza. Spróbuj ponownie.',
       text: 'Wpis powinien mieć od 20 do 4000 znaków.',
       relation: 'Linia „skąd znasz Flopa” - nie dłuższa niż 120 znaków.',
-      rateLimited: 'Najwyżej trzy wpisy na godzinę. Zajrzyj trochę później.',
+      rateLimited: 'Najwyżej jeden wpis na dobę. Zajrzyj jutro.',
       github: 'GitHub nie przyjął wpisu. Tekst jest na miejscu; spróbuj za minutę.',
     },
     sent: {

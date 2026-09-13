@@ -119,8 +119,9 @@ should need one. A `state` parameter on the OAuth round trip, kept in its own sh
 and checked on callback, against CSRF.
 
 **Rate limit without storage.** With no KV there is no counter to keep. Before creating an
-issue, ask GitHub instead: `GET /repos/Flopsstuff/flopbut.pl/issues?creator=<login>&since=<one
-hour ago>` with the user's own token, and refuse above three. The list endpoint rather than
+issue, ask GitHub instead: `GET /repos/Flopsstuff/flopbut.pl/issues?creator=<login>&since=<24
+hours ago>` with the user's own token, and refuse if there is one already: one note a day per
+author (three an hour until 2026-09-13). The list endpoint rather than
 search: it is real time, and search with a GitHub App user token needs `is:issue` and has its
 own, much smaller, quota. The list lags a second or two behind a write, so a burst of
 submissions inside that window slips past the cap (seen on 2026-09-13: three in two seconds
