@@ -46,10 +46,14 @@ The catalogue this site links out to lives at [stuff.flopbut.pl](https://stuff.f
 ## Deployment
 
 Pushes to `main` build and deploy through [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml),
-which runs lint, type check and build before shipping. Two repository secrets are required:
+which runs lint, type check and build before shipping. Two repository secrets deploy the site:
 
 - `CLOUDFLARE_API_TOKEN` - a token with the *Edit Cloudflare Workers* template
 - `CLOUDFLARE_ACCOUNT_ID`
+
+Three more are uploaded to the worker on every deploy and power the sign-in form behind
+`/request/` (see `docs/request-to-issue.md`): `GH_APP_CLIENT_ID`, `GH_APP_CLIENT_SECRET` and
+`SESSION_SECRET`. Locally the same names live in `.env`, which `astro dev` reads.
 
 The apex and `www` are bound through plain worker routes rather than a custom domain, because
 `flopbut.pl` still carries leftover proxied A records that block custom domain attachment. The

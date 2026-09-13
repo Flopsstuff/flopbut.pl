@@ -16,6 +16,7 @@ const en = {
     skipToContent: 'Skip to content',
     theme: 'Switch theme',
     language: 'Language',
+    wall: 'wall',
   },
 
   hero: {
@@ -134,12 +135,48 @@ const en = {
     meta: {
       title: 'Write on the wall - Flop Butylkin',
       description:
-        'Leave a note about Flop Butylkin on his wall. Sign-in with GitHub and the form are on the way.',
+        'Leave a note about Flop Butylkin on his wall. Sign in with GitHub, write it in your own words.',
     },
-    eyebrow: 'Coming soon',
-    title: 'The form is not here yet',
-    body: 'Sign-in with GitHub and the form are still being built. Come back a little later.',
+    eyebrow: 'Write on the wall',
+    intro: 'How it works:',
+    steps: [
+      'You need a GitHub account. You sign in with it, and the request goes out in your name.',
+      'Your text becomes an issue in the site repository: public, with your login as the author.',
+      'The agents that run the site pick the issue up and change the wall the way you asked.',
+    ],
+    freedom:
+      'Ask for anything. The agents can do a lot more than print text, so use your imagination. One request in return: keep it constructive. Destructive asks are simply closed.',
+    signIn: 'Sign in with GitHub',
+    signedInAs: 'Signed in as',
+    signOut: 'Sign out',
+    textLabel: 'Your note',
+    textHint:
+      'A recommendation, a thank you, a correction, or any other request to the wall. Twenty to four thousand characters, in any language.',
+    relationLabel: 'How do you know Flop?',
+    relationHint: 'Optional. A few words: worked together at X, met at Y.',
+    publicNotice:
+      'Sending creates a public issue on GitHub in your name. Whatever ends up on the wall carries it too.',
+    submit: 'Send',
     back: 'Back to the wall',
+    unavailable: {
+      title: 'The form is resting',
+      body: 'Sign-in is not configured on this deployment. Try again later.',
+    },
+    errors: {
+      auth: 'GitHub sign-in did not go through. Try again.',
+      expired: 'Your session has ended. Sign in again; nothing was sent.',
+      form: 'That did not look like a form submission. Try again.',
+      text: 'The note runs between 20 and 4000 characters.',
+      relation: 'Keep the "how do you know Flop" line under 120 characters.',
+      rateLimited: 'One note a day is the limit. Come back tomorrow.',
+      github: 'GitHub did not accept the note. Your text is still here; try again in a minute.',
+    },
+    sent: {
+      eyebrow: 'Sent',
+      title: 'Thank you',
+      body: 'Your note is now an issue in the site repository, in your name. The agents that run the site decide how it lands on the wall.',
+      issue: 'Open the issue on GitHub',
+    },
   },
 };
 
@@ -162,6 +199,7 @@ const ru: Dictionary = {
     skipToContent: 'К содержимому',
     theme: 'Сменить тему',
     language: 'Язык',
+    wall: 'стена',
   },
 
   hero: {
@@ -279,12 +317,48 @@ const ru: Dictionary = {
     meta: {
       title: 'Написать на стене - Flop Butylkin',
       description:
-        'Оставьте запись о Flop Butylkin на его стене. Вход через GitHub и форма скоро появятся.',
+        'Оставьте запись о Flop Butylkin на его стене. Войдите через GitHub и напишите своими словами.',
     },
-    eyebrow: 'Скоро',
-    title: 'Формы пока нет',
-    body: 'Вход через GitHub и форма ещё в работе. Загляните чуть позже.',
+    eyebrow: 'Написать на стене',
+    intro: 'Как это работает:',
+    steps: [
+      'Нужен аккаунт GitHub. Вы входите через него, и запрос уходит от вашего имени.',
+      'Ваш текст становится issue в репозитории сайта: публично, с вашим логином в авторах.',
+      'Агенты, которые ведут сайт, берут issue в работу и меняют стену под ваш запрос.',
+    ],
+    freedom:
+      'Запрос может быть любым. Агенты умеют куда больше, чем вывести текст, так что проявите фантазию. Одна просьба в ответ: без разрушительных действий, такие запросы просто закрывают.',
+    signIn: 'Войти через GitHub',
+    signedInAs: 'Вы вошли как',
+    signOut: 'Выйти',
+    textLabel: 'Ваша запись',
+    textHint:
+      'Рекомендация, благодарность, поправка или любой другой запрос к стене. От двадцати до четырёх тысяч знаков, на любом языке.',
+    relationLabel: 'Откуда вы знаете Флопа?',
+    relationHint: 'Необязательно. Пара слов: работали вместе в X, познакомились на Y.',
+    publicNotice:
+      'Отправка создаёт публичный issue на GitHub от вашего имени. Всё, что попадёт на стену, тоже будет подписано вами.',
+    submit: 'Отправить',
     back: 'Назад на стену',
+    unavailable: {
+      title: 'Форма отдыхает',
+      body: 'На этом развёртывании вход не настроен. Загляните позже.',
+    },
+    errors: {
+      auth: 'Вход через GitHub не удался. Попробуйте ещё раз.',
+      expired: 'Сессия закончилась. Войдите заново; ничего не отправлено.',
+      form: 'Это не похоже на отправку формы. Попробуйте ещё раз.',
+      text: 'Запись должна быть от 20 до 4000 знаков.',
+      relation: 'Строка «откуда знаете Флопа» - не длиннее 120 знаков.',
+      rateLimited: 'Не больше одной записи в сутки. Загляните завтра.',
+      github: 'GitHub не принял запись. Текст на месте; попробуйте через минуту.',
+    },
+    sent: {
+      eyebrow: 'Отправлено',
+      title: 'Спасибо',
+      body: 'Ваша запись стала issue в репозитории сайта, от вашего имени. Агенты, которые ведут сайт, решат, как она попадёт на стену.',
+      issue: 'Открыть issue на GitHub',
+    },
   },
 };
 
@@ -300,6 +374,7 @@ const pl: Dictionary = {
     skipToContent: 'Przejdź do treści',
     theme: 'Zmień motyw',
     language: 'Język',
+    wall: 'ściana',
   },
 
   hero: {
@@ -417,12 +492,48 @@ const pl: Dictionary = {
     meta: {
       title: 'Napisz na ścianie - Flop Butylkin',
       description:
-        'Zostaw wpis o Flopie Butylkinie na jego ścianie. Logowanie przez GitHub i formularz już wkrótce.',
+        'Zostaw wpis o Flopie Butylkinie na jego ścianie. Zaloguj się przez GitHub i napisz własnymi słowami.',
     },
-    eyebrow: 'Wkrótce',
-    title: 'Formularza jeszcze nie ma',
-    body: 'Logowanie przez GitHub i formularz są jeszcze w budowie. Zajrzyj trochę później.',
+    eyebrow: 'Napisz na ścianie',
+    intro: 'Jak to działa:',
+    steps: [
+      'Potrzebne jest konto GitHub. Logujesz się nim, a prośba wychodzi w Twoim imieniu.',
+      'Twój tekst staje się issue w repozytorium strony: publicznie, z Twoim loginem jako autorem.',
+      'Agenci prowadzący stronę biorą issue do pracy i zmieniają ścianę tak, jak poprosisz.',
+    ],
+    freedom:
+      'Prośba może być dowolna. Agenci potrafią znacznie więcej niż wypisać tekst, więc puść wodze fantazji. Jedna prośba w zamian: bez działań destrukcyjnych, takie zgłoszenia są po prostu zamykane.',
+    signIn: 'Zaloguj się przez GitHub',
+    signedInAs: 'Zalogowano jako',
+    signOut: 'Wyloguj',
+    textLabel: 'Twój wpis',
+    textHint:
+      'Rekomendacja, podziękowanie, sprostowanie albo dowolna inna prośba do ściany. Od dwudziestu do czterech tysięcy znaków, w dowolnym języku.',
+    relationLabel: 'Skąd znasz Flopa?',
+    relationHint: 'Opcjonalnie. Kilka słów: pracowaliśmy razem w X, poznaliśmy się na Y.',
+    publicNotice:
+      'Wysłanie tworzy publiczne issue na GitHubie w Twoim imieniu. Wszystko, co trafi na ścianę, też będzie podpisane Tobą.',
+    submit: 'Wyślij',
     back: 'Wróć na ścianę',
+    unavailable: {
+      title: 'Formularz odpoczywa',
+      body: 'Na tym wdrożeniu logowanie nie jest skonfigurowane. Zajrzyj później.',
+    },
+    errors: {
+      auth: 'Logowanie przez GitHub nie powiodło się. Spróbuj ponownie.',
+      expired: 'Sesja wygasła. Zaloguj się ponownie; nic nie zostało wysłane.',
+      form: 'To nie wyglądało na wysłanie formularza. Spróbuj ponownie.',
+      text: 'Wpis powinien mieć od 20 do 4000 znaków.',
+      relation: 'Linia „skąd znasz Flopa” - nie dłuższa niż 120 znaków.',
+      rateLimited: 'Najwyżej jeden wpis na dobę. Zajrzyj jutro.',
+      github: 'GitHub nie przyjął wpisu. Tekst jest na miejscu; spróbuj za minutę.',
+    },
+    sent: {
+      eyebrow: 'Wysłano',
+      title: 'Dziękuję',
+      body: 'Twój wpis jest teraz issue w repozytorium strony, w Twoim imieniu. Agenci prowadzący stronę zdecydują, jak trafi na ścianę.',
+      issue: 'Otwórz issue na GitHubie',
+    },
   },
 };
 
