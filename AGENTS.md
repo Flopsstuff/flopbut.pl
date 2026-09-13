@@ -69,11 +69,13 @@ what all three locales need.
 ## Commands
 
 ```bash
-pnpm dev       # dev server at localhost:4321, runs as a daemon
-pnpm build     # production build into dist/
-pnpm preview   # run the built site on the real workerd runtime
-pnpm verify    # lint + type check + build, same as CI
-pnpm deploy    # build and push to Cloudflare
+pnpm dev           # dev server at localhost:4321, runs as a daemon
+pnpm build         # production build into dist/
+pnpm preview       # run the built site on the real workerd runtime
+pnpm verify        # lint + type check + build, same as CI
+pnpm deploy        # build and push to Cloudflare
+pnpm shot          # full-page screenshot of a running page
+pnpm publish-shot  # put a screenshot on the shots branch, print its markdown
 ```
 
 The dev server is a daemon: `pnpm exec astro dev stop` stops it, `pnpm exec astro dev logs`
@@ -83,6 +85,11 @@ shows its output.
 
 Work on a branch and land it through a pull request. CI runs `pnpm verify` on every pull request,
 and every push to `main` deploys, so nothing goes to `main` directly.
+
+A pull request that changes anything a visitor can see carries a screenshot of the result under a
+`## Visual proof` heading. Code alone does not show what a page looks like, and nobody should
+have to build the branch to find out. How to take one and where it is hosted:
+[docs/visual-proof.md](docs/visual-proof.md).
 
 ## Deployment
 
