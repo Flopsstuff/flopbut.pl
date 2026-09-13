@@ -223,7 +223,12 @@ App**, not under the personal account.
 7. **Webhook**: untick *Active*. Nothing here listens; leaving it on forces a webhook URL.
 8. **Repository permissions**: *Issues* -> **Read and write**. *Metadata* becomes read-only on
    its own. Nothing else, and no account permissions at all.
-9. **Where can this GitHub App be installed?**: *Only on this account*.
+9. **Where can this GitHub App be installed?**: *Any account*, which makes the app public.
+   *Only on this account* was the first choice and it was wrong: a private app can only be
+   authorized by members of the owning organization, so on 2026-09-13 a second account got a
+   404 on GitHub's authorize page. Public only means others could install the app on their own
+   repositories, where it does nothing; this installation and its tokens stay limited to
+   `flopbut.pl`. An existing app is switched under *Advanced -> Make public*.
 10. Create, then on the app page: copy the **Client ID** and **Generate a new client secret**;
     the secret is shown once. *Generate a private key* was skipped at first; moderation needed
     one on 2026-09-13 (see "Moderation"), and the `.pem` went straight into the automation's
