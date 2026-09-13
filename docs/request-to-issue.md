@@ -165,9 +165,10 @@ App**, not under the personal account.
 1. **Name**: globally unique on GitHub, shown on the authorization screen. Something like
    `flopbut.pl requests`.
 2. **Homepage URL**: `https://flopbut.pl/`.
-3. **Callback URLs**, two of them:
+3. **Callback URLs**, two of them, each in its own field (press *Add redirect URI* for the
+   second; both pasted into one field with a comma read as a single URL that matches nothing):
    `https://flopbut.pl/api/auth/callback` and `http://localhost:4321/api/auth/callback` for
-   `astro dev`.
+   `astro dev`. Leave *Allow wildcard matching* off.
 4. **Expire user authorization tokens**: leave on. Tokens then die after eight hours, well after
    the cookie does, and the refresh token is simply never used.
 5. **Request user authorization (OAuth) during installation**: off. Installation is a one-time
