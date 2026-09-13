@@ -16,6 +16,7 @@ const en = {
     skipToContent: 'Skip to content',
     theme: 'Switch theme',
     language: 'Language',
+    wall: 'wall',
   },
 
   hero: {
@@ -193,6 +194,7 @@ const ru: Dictionary = {
     skipToContent: 'К содержимому',
     theme: 'Сменить тему',
     language: 'Язык',
+    wall: 'стена',
   },
 
   hero: {
@@ -362,6 +364,7 @@ const pl: Dictionary = {
     skipToContent: 'Przejdź do treści',
     theme: 'Zmień motyw',
     language: 'Język',
+    wall: 'ściana',
   },
 
   hero: {

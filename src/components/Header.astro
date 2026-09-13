@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '../config.ts';
-import { alternateLinks, useTranslations } from '../i18n/utils.ts';
+import { alternateLinks, localizedPath, useTranslations } from '../i18n/utils.ts';
 
 interface Props {
   locale: Locale;
@@ -11,11 +11,22 @@ interface Props {
 const { locale, toHome = false } = Astro.props;
 const t = useTranslations(locale);
 const alternates = alternateLinks(locale, toHome ? new URL('/', Astro.url) : Astro.url);
+const wallPath = localizedPath(locale, '/wall/');
+const onWall = Astro.url.pathname === wallPath;
 ---
 
 <header class="header">
   <div class="page header-inner">
-    <a class="wordmark" href={locale === 'en' ? '/' : `/${locale}/`}>flopbut.pl</a>
+    <nav class="brand" aria-label="flopbut.pl">
+      <a class="wordmark" href={locale === 'en' ? '/' : `/${locale}/`}>flopbut.pl</a>
+      <a
+        class:list={['nav-link', { 'nav-current': onWall }]}
+        href={wallPath}
+        aria-current={onWall ? 'page' : undefined}
+      >
+        {t.nav.wall}
+      </a>
+    </nav>
 
     <div class="controls">
       <nav class="langs" aria-label={t.nav.language}>
@@ -82,6 +93,29 @@ const alternates = alternateLinks(locale, toHome ? new URL('/', Astro.url) : Ast
     justify-content: space-between;
     gap: 1rem;
     min-height: 3.5rem;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .nav-link {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--text);
+  }
+
+  .nav-current {
+    color: var(--brass);
   }
 
   .wordmark {
