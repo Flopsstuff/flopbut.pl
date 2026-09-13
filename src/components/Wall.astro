@@ -28,9 +28,8 @@ const t = useTranslations(locale);
     </a>
 
     {/*
-      Oldest first, newest at the bottom, one <WallEntry> per accepted request. A new
-      contribution is a component under wall/ plus its strings in the dictionaries; nothing
-      already on the wall moves to make room.
+      By default oldest first, newest at the bottom, one <WallEntry> per accepted request. That
+      is only a default: a contribution may restyle, reorder or break out of this list.
     */}
     <ul class="entries">
       <WallEntry locale={locale} author="katyoid" issue={11} date="2026-09-13">
