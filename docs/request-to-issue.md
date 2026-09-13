@@ -67,6 +67,13 @@ flopbut-pl GitHub App**, so GitHub shows `flopbut-pl[bot]` and not the owner:
 - **no verdict** (the model ran out of tokens or answered off format): label `needs-review` and
   leave the issue open for a person.
 
+**Reruns are safe.** Rerunning `label-wall.yml` for an issue sends it to the webhook again, and
+a second model call could disagree with the first. So before the model is called, moderation
+reads the issue and stops if it already carries `safe` or `unsafe`. `needs-review` does not stop
+it, which makes a rerun the way to settle one, and a safe or unsafe outcome removes
+`needs-review`. For unsafe the close and the comment come first and the label last, so the label
+only appears on a run that finished; a run cut short in the middle is simply retried.
+
 The labels exist in the repository (created 2026-09-13). Where the automation runs and what it is
 built with is deliberately not written down here.
 
