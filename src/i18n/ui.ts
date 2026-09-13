@@ -133,6 +133,8 @@ const en = {
   request: {
     meta: {
       title: 'Write on the wall - Flop Butylkin',
+      description:
+        'Leave a note about Flop Butylkin on his wall. Sign-in with GitHub and the form are on the way.',
     },
     eyebrow: 'Coming soon',
     title: 'The form is not here yet',
@@ -276,6 +278,8 @@ const ru: Dictionary = {
   request: {
     meta: {
       title: 'Написать на стене - Flop Butylkin',
+      description:
+        'Оставьте запись о Flop Butylkin на его стене. Вход через GitHub и форма скоро появятся.',
     },
     eyebrow: 'Скоро',
     title: 'Формы пока нет',
@@ -412,6 +416,8 @@ const pl: Dictionary = {
   request: {
     meta: {
       title: 'Napisz na ścianie - Flop Butylkin',
+      description:
+        'Zostaw wpis o Flopie Butylkinie na jego ścianie. Logowanie przez GitHub i formularz już wkrótce.',
     },
     eyebrow: 'Wkrótce',
     title: 'Formularza jeszcze nie ma',

@@ -6,6 +6,6 @@ import Layout from '../layouts/Layout.astro';
 const t = useTranslations('en');
 ---
 
-<Layout locale="en" title={t.request.meta.title} noIndex>
+<Layout locale="en" title={t.request.meta.title} description={t.request.meta.description} noIndex>
   <Request locale="en" />
 </Layout>
