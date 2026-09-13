@@ -23,8 +23,8 @@ const wall = localizedPath(locale, '/wall/');
     {
       view.state === 'unavailable' && (
         <>
-          <p class="label">{t.request.eyebrow}</p>
-          <h1 class="title">{t.request.unavailable.title}</h1>
+          <h1 class="label heading">{t.request.eyebrow}</h1>
+          <p class="lead">{t.request.unavailable.title}</p>
           <p class="prose">{t.request.unavailable.body}</p>
         </>
       )
@@ -33,8 +33,7 @@ const wall = localizedPath(locale, '/wall/');
     {
       view.state === 'signedOut' && (
         <>
-          <p class="label">{t.request.eyebrow}</p>
-          <h1 class="title">{t.request.title}</h1>
+          <h1 class="label heading">{t.request.eyebrow}</h1>
           <p class="prose">{t.request.intro}</p>
           <ol class="steps">
             {t.request.steps.map((step) => (
@@ -58,8 +57,7 @@ const wall = localizedPath(locale, '/wall/');
     {
       view.state === 'signedIn' && (
         <>
-          <p class="label">{t.request.eyebrow}</p>
-          <h1 class="title">{t.request.title}</h1>
+          <h1 class="label heading">{t.request.eyebrow}</h1>
 
           <div class="identity">
             <img
@@ -160,6 +158,11 @@ const wall = localizedPath(locale, '/wall/');
   .title {
     font-size: var(--step-5);
     margin-block: 1.5rem 1.25rem;
+  }
+
+  /* The page's heading is the small label: the wall's button already said what this is. */
+  .heading {
+    margin: 0 0 1.5rem;
   }
 
   .cta {

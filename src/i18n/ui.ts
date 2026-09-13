@@ -138,7 +138,6 @@ const en = {
         'Leave a note about Flop Butylkin on his wall. Sign in with GitHub, write it in your own words.',
     },
     eyebrow: 'Write on the wall',
-    title: 'Leave a note about Flop',
     intro: 'How it works:',
     steps: [
       'You need a GitHub account. You sign in with it, and the request goes out in your name.',
@@ -321,7 +320,6 @@ const ru: Dictionary = {
         'Оставьте запись о Flop Butylkin на его стене. Войдите через GitHub и напишите своими словами.',
     },
     eyebrow: 'Написать на стене',
-    title: 'Оставьте запись о Флопе',
     intro: 'Как это работает:',
     steps: [
       'Нужен аккаунт GitHub. Вы входите через него, и запрос уходит от вашего имени.',
@@ -497,7 +495,6 @@ const pl: Dictionary = {
         'Zostaw wpis o Flopie Butylkinie na jego ścianie. Zaloguj się przez GitHub i napisz własnymi słowami.',
     },
     eyebrow: 'Napisz na ścianie',
-    title: 'Zostaw wpis o Flopie',
     intro: 'Jak to działa:',
     steps: [
       'Potrzebne jest konto GitHub. Logujesz się nim, a prośba wychodzi w Twoim imieniu.',
