@@ -13,7 +13,7 @@ node_modules/
 .env.*
 !.env.example
 
-# review screenshots, published to the shots branch rather than committed here
+# review screenshots: attached to the pull request, never committed
 .review-shots/
 
 # logs
