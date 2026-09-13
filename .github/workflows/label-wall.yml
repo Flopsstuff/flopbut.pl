@@ -1,9 +1,12 @@
 name: Label wall requests
 
 # The form cannot set labels itself: GitHub drops them for authors without push access,
-# which is every contributor this form exists for. So the repository does it on arrival,
-# keyed on the marker the form writes as the first line of every issue body, and then
-# tells the agents' side, through a webhook, that there is work.
+# which is every contributor this form exists for. So the repository does it on arrival
+# and then tells the agents' side, through a webhook, that there is work.
+#
+# What counts as "from the form": GitHub records the app an issue was created through in
+# `performed_via_github_app`, and only the app's own token can set that. The marker in the
+# body is a courtesy for readers; anyone can type it, so it is not the gate.
 #
 # Runs on its own when an issue opens. Run it by hand with an issue number to send that
 # issue again: Actions -> this workflow -> Run workflow, or
@@ -30,6 +33,8 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       REPO: ${{ github.repository }}
       NUMBER: ${{ github.event.issue.number || inputs.issue }}
+      # The wall's GitHub App (public: GET /apps/flopbut-pl). Same value as APP_ID in src/config.ts.
+      APP_ID: '4885332'
       # The URL is a secret: it is the only credential, and the repository is public.
       WALL_WEBHOOK_URL: ${{ secrets.WALL_WEBHOOK_URL }}
 
@@ -39,11 +44,11 @@ jobs:
         id: issue
         run: |
           gh api "repos/$REPO/issues/$NUMBER" > issue.json
-          if jq -e '(.body // "") | startswith("<!-- wall-request v1 -->")' issue.json > /dev/null; then
+          if jq -e --argjson app "$APP_ID" '.performed_via_github_app.id == $app' issue.json > /dev/null; then
             echo "wall=true" >> "$GITHUB_OUTPUT"
           else
             echo "wall=false" >> "$GITHUB_OUTPUT"
-            echo "Issue #$NUMBER does not carry the wall marker; nothing to do."
+            echo "Issue #$NUMBER was not created through the wall's GitHub App; nothing to do."
           fi
 
       - name: Add the wall label
