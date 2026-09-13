@@ -61,3 +61,11 @@ fails after uploading assets.
 The apex is bound with a plain route rather than `custom_domain`, because leftover proxied A
 records on `flopbut.pl` block custom domain attachment. Deleting those records and switching
 to `custom_domain` is the tidier end state.
+
+## The wall
+
+`/wall/` is static. `/request/` and `/api/auth/*` are the server-rendered part: GitHub sign-in,
+a sealed cookie, and an issue filed as the visitor. Design and decisions live in
+`docs/request-to-issue.md`. In dev the secrets come from `.env`; test on `http://localhost:4321`,
+not `127.0.0.1`, because only the former is a registered OAuth callback and cookies do not cross
+hosts.

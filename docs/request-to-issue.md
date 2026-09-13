@@ -1,6 +1,6 @@
 # Draft: signed-in form where people contribute content about Flop
 
-Status: **in progress**. Written 2026-08-08, revised 2026-09-13.
+Status: **built, tested with the owner's account only**. Written 2026-08-08, revised 2026-09-13.
 
 ## What this actually is
 
@@ -23,8 +23,8 @@ The wall is a surface, not a slot. The decision below not to pre-define a shape 
 content still stands: what an entry looks like on the wall is for the agents downstream to work
 out. Until the first one lands the wall is empty, and says so.
 
-Three locales, static, no SSR and no secrets on this side. `/request/` is a "coming soon" stub
-until the form exists, so the button never leads to a 404.
+Three locales, static, no SSR and no secrets on the wall itself. `/request/` and the auth routes
+are the only server-rendered part of the site.
 
 ## Scope
 
@@ -39,8 +39,10 @@ the copy and dropping abuse all happen downstream and are out of scope here.
    -> GET  /api/auth/login         redirect to GitHub with a state parameter
    -> GET  /api/auth/callback      exchange the code, set the session cookie
    -> form                         only reachable once signed in
-   -> POST /api/request            validate, then GitHub API as the user
+   -> POST /request/               the page handles its own POST: validate, then GitHub as the user
    -> issue in Flopsstuff/flopbut.pl, authored by the user
+   -> /request/?sent=N             thanks, with a link to the issue
+   (  POST /api/auth/logout        drops the cookie; www and workers.dev redirect to the apex  )
    -> [ agents downstream: classify, decide, publish or close ]
 ```
 
@@ -107,17 +109,25 @@ straight from the callback with a token that lives for seconds, would remove the
 entirely. Rejected: the person has to see under which name their words will be published before
 they start writing, not after.
 
-Session between sign-in and submit: **signed httpOnly cookie**, Secure, SameSite=Lax, short
-lived (one hour is plenty; the GitHub token itself expires after eight). HMAC via WebCrypto with
-a `SESSION_SECRET`, so there is no storage and `session: false` in `astro.config.mjs` stays
-untouched. This matters: the Cloudflare deploy token has no KV permission, and nothing here
+Session between sign-in and submit: **sealed httpOnly cookie**, Secure, SameSite=Lax, short
+lived (one hour is plenty; the GitHub token itself expires after eight). AES-GCM via WebCrypto
+under a key derived from `SESSION_SECRET`, with the cookie's own name as additional data, so the
+OAuth state cookie cannot be replayed as a session. Authenticated encryption rather than a bare
+HMAC because the cookie carries the user's GitHub token. No storage, and `session: false` in
+`astro.config.mjs` stays untouched. This matters: the Cloudflare deploy token has no KV permission, and nothing here
 should need one. A `state` parameter on the OAuth round trip, kept in its own short-lived cookie
 and checked on callback, against CSRF.
 
 **Rate limit without storage.** With no KV there is no counter to keep. Before creating an
-issue, ask GitHub instead: `GET /search/issues?q=repo:Flopsstuff/flopbut.pl author:<login>
-created:><one hour ago>` with the user's own token, and refuse above a small cap. GitHub's own
-abuse limits sit behind that as the backstop.
+issue, ask GitHub instead: `GET /repos/Flopsstuff/flopbut.pl/issues?creator=<login>&since=<one
+hour ago>` with the user's own token, and refuse above three. The list endpoint rather than
+search: it is real time, and search with a GitHub App user token needs `is:issue` and has its
+own, much smaller, quota. GitHub's own abuse limits sit behind that as the backstop.
+
+**The page handles its own POST.** A separate `/api/request` could only redirect after a
+failure, and the text would be gone with it. `/request/` is server-rendered, reads the cookie,
+and on POST validates, creates the issue and either redirects to `?sent=N` or renders the form
+again with the text still in it.
 
 ## The issue is a contract
 
@@ -176,29 +186,35 @@ App**, not under the personal account.
     The next deploy uploads them to the worker.
     Done 2026-09-09.
 
-**Before writing any page code, prove the model with a second account.** Sign in with an
-account that is not a member of `Flopsstuff`, exchange the code by hand, and `POST
-/repos/Flopsstuff/flopbut.pl/issues` with that token. If that works, everything else is
-plumbing. If it does not, the assumption that non-collaborators can file issues through the app
-was wrong and the design has to change before anything is built on it.
+**Prove the model with a second account.** Sign in with an account that is not a member of
+`Flopsstuff` and submit the form. If an issue appears, the model holds. If it does not, the
+assumption that non-collaborators can file issues through the app was wrong and the design has
+to change. There was no second account to hand on 2026-09-13, so the flow was built and tested
+with the owner's account only; this check is still owed.
 
 ## Suggested order of work
 
 0. Empty `/wall/` in three locales with the button, `/request/` as a "coming soon" stub, link
    from the home page. Done 2026-09-13.
-1. Register and install the GitHub App, store the secrets, run the second-account test above.
+1. Register and install the GitHub App, store the secrets. Done 2026-09-09. The second-account
+   test is still pending.
 2. `/request/` replaces the stub: signed-out and signed-in states, and the sentence about
-   publication.
+   publication. Done 2026-09-13.
 3. OAuth round trip: `/api/auth/login`, `/api/auth/callback`, `state` check, session cookie.
-4. `POST /api/request`: validation, the rate-limit query, template rendering with escaping,
-   issue creation as the user.
+   Done 2026-09-13.
+4. `POST /request/`: validation, the rate-limit query, template rendering with escaping, issue
+   creation as the user. Done 2026-09-13.
 
-Four steps, no LLM on this side, and nothing here depends on the downstream design being settled.
+No LLM on this side, and nothing here depends on the downstream design being settled. Code:
+`src/lib/session.ts`, `src/lib/github.ts`, `src/lib/request-page.ts`, `src/pages/api/auth/`,
+`src/components/Request.astro`.
 
 ## Open questions
 
-- **What does the form ask?** Probably one free text field plus how the person knows Flop, given
-  that agents classify rather than the submitter picking a category. Still undecided.
+- **What does the form ask?** Decided 2026-09-13: one free text field (20 to 4000 characters)
+  plus an optional line on how the person knows Flop. No category: agents classify.
+- **Can a non-collaborator file an issue through the app?** Untested, see the second-account
+  check above. Everything else is built on the assumption that they can.
 - Removal: if a contributor asks for their entry to be taken down, what is the path?
 - Does a published contribution link back to its issue, so the provenance is checkable?
 - What does an entry look like on the wall: author, date, the text, a link to the issue? Left to
