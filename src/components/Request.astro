@@ -36,6 +36,12 @@ const wall = localizedPath(locale, '/wall/');
           <p class="label">{t.request.eyebrow}</p>
           <h1 class="title">{t.request.title}</h1>
           <p class="prose">{t.request.intro}</p>
+          <ol class="steps">
+            {t.request.steps.map((step) => (
+              <li>{step}</li>
+            ))}
+          </ol>
+          <p class="prose">{t.request.freedom}</p>
           {view.error && (
             <p class="error" role="alert">
               {t.request.errors[view.error]}
@@ -158,6 +164,34 @@ const wall = localizedPath(locale, '/wall/');
 
   .cta {
     margin-top: 2.5rem;
+  }
+
+  .steps {
+    max-width: var(--measure);
+    margin: 1.5rem 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    color: var(--text);
+  }
+
+  .steps li {
+    counter-increment: step;
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: 0.5rem;
+    align-items: baseline;
+  }
+
+  .steps li::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    color: var(--patina);
   }
 
   .error {

@@ -139,14 +139,20 @@ const en = {
     },
     eyebrow: 'Write on the wall',
     title: 'Leave a note about Flop',
-    intro:
-      'Sign in with GitHub first. Your words go on the wall under your GitHub name, so you get to see who you are before you write.',
+    intro: 'How it works:',
+    steps: [
+      'You need a GitHub account. You sign in with it, and the request goes out in your name.',
+      'Your text becomes an issue in the site repository: public, with your login as the author.',
+      'The agents that run the site pick the issue up and change the wall the way you asked.',
+    ],
+    freedom:
+      'Ask for anything. The agents can do a lot more than print text, so use your imagination. One request in return: keep it constructive. Destructive asks are simply closed.',
     signIn: 'Sign in with GitHub',
     signedInAs: 'Signed in as',
     signOut: 'Sign out',
     textLabel: 'Your note',
     textHint:
-      'A recommendation, a thank you, a correction. Twenty to four thousand characters, in any language.',
+      'A recommendation, a thank you, a correction, or any other request to the wall. Twenty to four thousand characters, in any language.',
     relationLabel: 'How do you know Flop?',
     relationHint: 'Optional. A few words: worked together at X, met at Y.',
     publicNotice:
@@ -316,14 +322,20 @@ const ru: Dictionary = {
     },
     eyebrow: 'Написать на стене',
     title: 'Оставьте запись о Флопе',
-    intro:
-      'Сначала вход через GitHub. Ваши слова появятся на стене под вашим именем в GitHub, так что вы видите, кто вы, ещё до того, как начнёте писать.',
+    intro: 'Как это работает:',
+    steps: [
+      'Нужен аккаунт GitHub. Вы входите через него, и запрос уходит от вашего имени.',
+      'Ваш текст становится issue в репозитории сайта: публично, с вашим логином в авторах.',
+      'Агенты, которые ведут сайт, берут issue в работу и меняют стену под ваш запрос.',
+    ],
+    freedom:
+      'Запрос может быть любым. Агенты умеют куда больше, чем вывести текст, так что проявите фантазию. Одна просьба в ответ: без разрушительных действий, такие запросы просто закрывают.',
     signIn: 'Войти через GitHub',
     signedInAs: 'Вы вошли как',
     signOut: 'Выйти',
     textLabel: 'Ваша запись',
     textHint:
-      'Рекомендация, благодарность, поправка. От двадцати до четырёх тысяч знаков, на любом языке.',
+      'Рекомендация, благодарность, поправка или любой другой запрос к стене. От двадцати до четырёх тысяч знаков, на любом языке.',
     relationLabel: 'Откуда вы знаете Флопа?',
     relationHint: 'Необязательно. Пара слов: работали вместе в X, познакомились на Y.',
     publicNotice:
@@ -486,14 +498,20 @@ const pl: Dictionary = {
     },
     eyebrow: 'Napisz na ścianie',
     title: 'Zostaw wpis o Flopie',
-    intro:
-      'Najpierw logowanie przez GitHub. Twoje słowa trafią na ścianę pod Twoją nazwą z GitHuba, więc widzisz, kim jesteś, zanim zaczniesz pisać.',
+    intro: 'Jak to działa:',
+    steps: [
+      'Potrzebne jest konto GitHub. Logujesz się nim, a prośba wychodzi w Twoim imieniu.',
+      'Twój tekst staje się issue w repozytorium strony: publicznie, z Twoim loginem jako autorem.',
+      'Agenci prowadzący stronę biorą issue do pracy i zmieniają ścianę tak, jak poprosisz.',
+    ],
+    freedom:
+      'Prośba może być dowolna. Agenci potrafią znacznie więcej niż wypisać tekst, więc puść wodze fantazji. Jedna prośba w zamian: bez działań destrukcyjnych, takie zgłoszenia są po prostu zamykane.',
     signIn: 'Zaloguj się przez GitHub',
     signedInAs: 'Zalogowano jako',
     signOut: 'Wyloguj',
     textLabel: 'Twój wpis',
     textHint:
-      'Rekomendacja, podziękowanie, sprostowanie. Od dwudziestu do czterech tysięcy znaków, w dowolnym języku.',
+      'Rekomendacja, podziękowanie, sprostowanie albo dowolna inna prośba do ściany. Od dwudziestu do czterech tysięcy znaków, w dowolnym języku.',
     relationLabel: 'Skąd znasz Flopa?',
     relationHint: 'Opcjonalnie. Kilka słów: pracowaliśmy razem w X, poznaliśmy się na Y.',
     publicNotice:
