@@ -18,13 +18,19 @@ export function callbackUrl(url: URL): string {
   return `${origin}/api/auth/callback`;
 }
 
-function gh(url: string, token: string, init: RequestInit = {}): Promise<Response> {
+async function gh(url: string, token: string, init: RequestInit = {}): Promise<Response> {
   const headers = new Headers(init.headers);
   headers.set('accept', 'application/vnd.github+json');
   headers.set('x-github-api-version', '2022-11-28');
   headers.set('user-agent', USER_AGENT);
   headers.set('authorization', `Bearer ${token}`);
-  return fetch(url, { ...init, headers });
+  const response = await fetch(url, { ...init, headers });
+  if (!response.ok) {
+    /* The status and GitHub's own message are the whole diagnosis; the token never appears. */
+    const detail = (await response.clone().text()).slice(0, 300);
+    console.warn(`[wall] GitHub ${init.method ?? 'GET'} ${url} -> ${response.status}: ${detail}`);
+  }
+  return response;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
