@@ -68,18 +68,26 @@ export async function handleRequest(
       return { state: 'signedOut', error: 'expired' };
     };
 
-    if (!RATE_LIMIT_EXEMPT.includes(session.login)) {
-      const since = new Date(Date.now() - 60 * 60 * 1000);
-      const recent = await countRecentIssues(session.token, session.login, since);
-      if (!recent.ok) return recent.status === 401 ? expired() : signedIn(fields, 'github', 502);
-      if (recent.count >= LIMITS.perHour) return signedIn(fields, 'rateLimited', 429);
+    /* A failed fetch or a non-JSON body throws; that is a GitHub failure too, not a 500. */
+    let number: number;
+    try {
+      if (!RATE_LIMIT_EXEMPT.includes(session.login)) {
+        const since = new Date(Date.now() - 60 * 60 * 1000);
+        const recent = await countRecentIssues(session.token, session.login, since);
+        if (!recent.ok) return recent.status === 401 ? expired() : signedIn(fields, 'github', 502);
+        if (recent.count >= LIMITS.perHour) return signedIn(fields, 'rateLimited', 429);
+      }
+
+      const issue = renderIssue({ login: session.login, locale, ...fields });
+      const result = await createIssue(session.token, issue);
+      if (!result.ok) return result.status === 401 ? expired() : signedIn(fields, 'github', 502);
+      number = result.number;
+    } catch (error) {
+      console.warn(`[wall] GitHub unreachable: ${error instanceof Error ? error.message : error}`);
+      return signedIn(fields, 'github', 502);
     }
 
-    const issue = renderIssue({ login: session.login, locale, ...fields });
-    const result = await createIssue(session.token, issue);
-    if (!result.ok) return result.status === 401 ? expired() : signedIn(fields, 'github', 502);
-
-    return Astro.redirect(localizedPath(locale, `/request/?sent=${result.number}`), 303);
+    return Astro.redirect(localizedPath(locale, `/request/?sent=${number}`), 303);
   }
 
   const sent = Astro.url.searchParams.get('sent');
