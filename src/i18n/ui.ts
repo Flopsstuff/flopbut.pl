@@ -127,8 +127,28 @@ const en = {
     eyebrow: 'The wall',
     title: 'What people say about Flop',
     body: 'Anyone who knows Flop can leave a note here: a recommendation, a thank you, a correction. Sign in with GitHub and write it in your own words. Whatever gets published appears with your name on it.',
-    empty: 'Nothing here yet. Be the first.',
     cta: 'Write on the wall',
+    /* The frame every entry sits in: who asked for it, and where the request is. */
+    entry: {
+      by: 'Asked for by',
+      request: 'request',
+    },
+    /*
+      One block per published entry, newest last, keyed the same way as the component
+      under components/wall/ that draws it.
+    */
+    entries: {
+      fiveCats: {
+        title: 'Five cats, and what Flop gets up to',
+        cats: {
+          agents: 'Herding a fleet of agents',
+          app: 'Getting the app out the door',
+          solder: 'Teaching hardware to talk back',
+          sail: 'Out on the water',
+          tango: 'Tango, on a weeknight',
+        },
+      },
+    },
   },
 
   request: {
@@ -309,8 +329,23 @@ const ru: Dictionary = {
     eyebrow: 'Стена',
     title: 'Что говорят о Флопе',
     body: 'Любой, кто знает Флопа, может оставить здесь запись: рекомендацию, благодарность, поправку. Войдите через GitHub и напишите своими словами. Всё, что будет опубликовано, появится под вашим именем.',
-    empty: 'Пока пусто. Будьте первым.',
     cta: 'Написать на стене',
+    entry: {
+      by: 'По просьбе',
+      request: 'запрос',
+    },
+    entries: {
+      fiveCats: {
+        title: 'Пять котиков и чем занят Флоп',
+        cats: {
+          agents: 'Пасет флот агентов',
+          app: 'Выкатывает приложение',
+          solder: 'Учит железо огрызаться',
+          sail: 'Под парусом',
+          tango: 'Танго посреди недели',
+        },
+      },
+    },
   },
 
   request: {
@@ -484,8 +519,23 @@ const pl: Dictionary = {
     eyebrow: 'Ściana',
     title: 'Co mówią o Flopie',
     body: 'Każdy, kto zna Flopa, może zostawić tu wpis: rekomendację, podziękowanie, sprostowanie. Zaloguj się przez GitHub i napisz własnymi słowami. To, co zostanie opublikowane, pojawi się pod Twoim nazwiskiem.',
-    empty: 'Na razie pusto. Bądź pierwszy.',
     cta: 'Napisz na ścianie',
+    entry: {
+      by: 'Na prośbę',
+      request: 'zgłoszenie',
+    },
+    entries: {
+      fiveCats: {
+        title: 'Pięć kotów i czym zajmuje się Flop',
+        cats: {
+          agents: 'Pasie flotę agentów',
+          app: 'Wypuszcza aplikację',
+          solder: 'Uczy sprzęt odpowiadać',
+          sail: 'Pod żaglami',
+          tango: 'Tango w środku tygodnia',
+        },
+      },
+    },
   },
 
   request: {
