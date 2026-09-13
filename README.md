@@ -24,6 +24,8 @@ anyone with a GitHub account can leave a note or a request on
 - [`docs/`](docs/) holds the design notes. Start with
   [`docs/request-to-issue.md`](docs/request-to-issue.md): the wall, the sign-in form, moderation
   and the decisions behind them.
+- [`docs/wall-entry-format.md`](docs/wall-entry-format.md) is the contract every published wall
+  entry follows: the frame, the width it claims, colour, strings and attribution.
 - [`AGENTS.md`](AGENTS.md) is for anyone changing the repository, people and coding agents alike:
   rules, stack, commands and deployment.
 

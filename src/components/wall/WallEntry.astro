@@ -47,18 +47,12 @@ const filed = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(ne
     padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
   }
 
-  /* Must match the breakpoint where Wall.astro turns .entries into six columns. */
-  @media (min-width: 52rem) {
-    .entry {
-      grid-column: span var(--span, 6);
-    }
-  }
-
   .credit {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 0.35rem 1.25rem;
+    /* Has to beat the run across the `·` inside .meta, or the widest gap falls within a group. */
+    gap: 0.35rem 2.25rem;
     margin-top: 1.75rem;
   }
 

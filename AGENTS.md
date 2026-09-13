@@ -123,3 +123,7 @@ a sealed cookie, and an issue filed as the visitor. Design and decisions live in
 `docs/request-to-issue.md`. In dev the secrets come from `.env`; test on `http://localhost:4321`,
 not `127.0.0.1`, because only the former is a registered OAuth callback and cookies do not cross
 hosts.
+
+Publishing an accepted request onto `/wall/` follows a fixed contract - the frame that carries
+attribution, the width an entry claims, colour, strings. Read
+[docs/wall-entry-format.md](docs/wall-entry-format.md) before building one.

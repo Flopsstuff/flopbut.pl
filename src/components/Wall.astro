@@ -70,5 +70,10 @@ const t = useTranslations(locale);
     .entries {
       grid-template-columns: repeat(6, 1fr);
     }
+
+    /* Each entry publishes --span inline; the breakpoint it depends on lives here, with the grid. */
+    .entries > :global(li) {
+      grid-column: span var(--span, 6);
+    }
   }
 </style>
