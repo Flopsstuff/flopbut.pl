@@ -45,7 +45,7 @@ App and changed a decision made here.
    -> issue in Flopsstuff/flopbut.pl, authored by the user
    -> /request/?sent=N             thanks, with a link to the issue
    (  POST /api/auth/logout        drops the cookie; www and workers.dev redirect to the apex  )
-   -> label-wall.yml: label wall, PUT the issue to the webhook
+   -> label-wall.yml: label wall and needs-review, PUT the issue to the webhook
    -> moderation: safe / unsafe / needs-review, as the app          (see "Moderation")
    -> [ agents downstream: take open wall + safe issues, decide, publish ]
 ```
@@ -64,8 +64,14 @@ flopbut-pl GitHub App**, so GitHub shows `flopbut-pl[bot]` and not the owner:
   non-collaborator cannot reopen an issue, so a reply is their only way to reach the owner when
   the model is wrong. The comment ends with a hidden `<!-- wall-moderation v1 ... -->` marker
   carrying the model's categories.
-- **no verdict** (the model ran out of tokens or answered off format): label `needs-review` and
-  leave the issue open for a person.
+- **no verdict** (the model ran out of tokens or answered off format): `needs-review` stays and
+  the issue stays open for a person.
+
+`needs-review` is there from the start: `label-wall.yml` adds it together with `wall` the moment
+the issue appears, before moderation runs, and moderation takes it off once it reaches safe or
+unsafe. So an issue moderation never got to, because the model or the automation was down, is
+not silently stuck with only `wall`; it is visibly waiting for a person. The form itself cannot
+add it, for the same reason it cannot add `wall`.
 
 **Reruns are safe.** Rerunning `label-wall.yml` for an issue sends it to the webhook again, and
 a second model call could disagree with the first. So before the model is called, moderation

@@ -51,9 +51,18 @@ jobs:
             echo "Issue #$NUMBER was not created through the wall's GitHub App; nothing to do."
           fi
 
-      - name: Add the wall label
+      # needs-review goes on at arrival and moderation removes it once it has a verdict, so an
+      # issue moderation never got to (the model down, the automation failing) still asks for a
+      # person. A manual rerun on an issue that already has safe or unsafe only re-adds wall:
+      # moderation skips such issues and would never take needs-review off again.
+      - name: Add the wall labels
         if: steps.issue.outputs.wall == 'true'
-        run: gh issue edit "$NUMBER" --repo "$REPO" --add-label wall
+        run: |
+          labels=wall
+          if ! jq -e '[.labels[].name] | any(. == "safe" or . == "unsafe")' issue.json > /dev/null; then
+            labels=wall,needs-review
+          fi
+          gh issue edit "$NUMBER" --repo "$REPO" --add-label "$labels"
 
       # Issue fields go through jq from the file, never inline, so a body cannot inject
       # into the shell.
