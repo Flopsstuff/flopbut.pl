@@ -2,24 +2,67 @@ name: Label wall requests
 
 # The form cannot set labels itself: GitHub drops them for authors without push access,
 # which is every contributor this form exists for. So the repository does it on arrival,
-# keyed on the marker the form writes as the first line of every issue body.
+# keyed on the marker the form writes as the first line of every issue body, and then
+# tells the agents' side, through a webhook, that there is work.
+#
+# Runs on its own when an issue opens. Run it by hand with an issue number to send that
+# issue again: Actions -> this workflow -> Run workflow, or
+# `gh workflow run label-wall.yml -f issue=<number>`.
 on:
   issues:
     types: [opened]
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: Number of the issue to label and send to the webhook again
+        required: true
+        type: number
 
 permissions:
   issues: write
 
 jobs:
   label:
-    name: Add the wall label
-    if: startsWith(github.event.issue.body, '<!-- wall-request v1 -->')
+    name: Add the wall label and notify
     runs-on: ubuntu-latest
     timeout-minutes: 2
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+      NUMBER: ${{ github.event.issue.number || inputs.issue }}
+      # The URL is a secret: it is the only credential, and the repository is public.
+      WALL_WEBHOOK_URL: ${{ secrets.WALL_WEBHOOK_URL }}
 
     steps:
-      - run: gh issue edit "$NUMBER" --repo "$REPO" --add-label wall
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NUMBER: ${{ github.event.issue.number }}
-          REPO: ${{ github.repository }}
+      # Always read the issue from the API so the event and the manual run share one path.
+      - name: Read the issue
+        id: issue
+        run: |
+          gh api "repos/$REPO/issues/$NUMBER" > issue.json
+          if jq -e '(.body // "") | startswith("<!-- wall-request v1 -->")' issue.json > /dev/null; then
+            echo "wall=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "wall=false" >> "$GITHUB_OUTPUT"
+            echo "Issue #$NUMBER does not carry the wall marker; nothing to do."
+          fi
+
+      - name: Add the wall label
+        if: steps.issue.outputs.wall == 'true'
+        run: gh issue edit "$NUMBER" --repo "$REPO" --add-label wall
+
+      # Issue fields go through jq from the file, never inline, so a body cannot inject
+      # into the shell.
+      - name: Notify the webhook
+        if: steps.issue.outputs.wall == 'true' && env.WALL_WEBHOOK_URL != ''
+        run: |
+          payload="$(jq -c --arg repo "$REPO" '{
+            event: "wall-request",
+            repository: $repo,
+            issue: {number, url: .html_url, title, body},
+            author: .user.login,
+            created_at
+          }' issue.json)"
+          curl -fsS -X PUT \
+            -H 'content-type: application/json' \
+            -H 'user-agent: flopbut.pl wall' \
+            --data "$payload" "$WALL_WEBHOOK_URL"

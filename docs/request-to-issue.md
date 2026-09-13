@@ -137,7 +137,12 @@ again with the text still in it.
 **The `wall` label is added by the repository, not by the form.** GitHub drops `labels` on
 issue creation for authors without push access, which is every contributor this form exists
 for. `.github/workflows/label-wall.yml` adds it on `issues: opened` when the body starts with
-the marker below, so downstream can filter on `label:wall` rather than on the title.
+the marker below, so downstream can filter on `label:wall` rather than on the title. The same
+workflow then `PUT`s the issue (number, url, title, body, author, created_at) as JSON to the
+webhook in the `WALL_WEBHOOK_URL` repository secret; the agents' side starts there. The URL is
+the only credential, which is why it lives in a secret and not in the workflow file, and where
+it points is nobody's business but the owner's. The workflow also runs by hand with an issue
+number (`gh workflow run label-wall.yml -f issue=<n>`) to send an issue again.
 
 ## The issue is a contract
 
