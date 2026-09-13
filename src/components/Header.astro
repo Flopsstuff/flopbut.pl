@@ -167,6 +167,26 @@ const onWall = Astro.url.pathname === wallPath;
     color: var(--brass);
   }
 
+  /* Phones: the wall link, three languages and the toggle must all fit beside the wordmark. */
+  @media (max-width: 26rem) {
+    .header-inner {
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .brand {
+      gap: 0.5rem;
+    }
+
+    .controls {
+      gap: 0.5rem;
+    }
+
+    .langs {
+      gap: 0.3rem;
+    }
+  }
+
   .theme-toggle {
     display: grid;
     place-items: center;
