@@ -1,16 +1,17 @@
 # Draft: signed-in form where people contribute content about Flop
 
-Status: **live; tested with a second account**. Written 2026-08-08, revised 2026-09-13.
+Status: **live; tested with a second account**. Written 2026-08-08, revised 2026-09-14.
 
 ## What this actually is
 
-Not a contact form. People who know Flop sign in with GitHub and contribute something to put on
-the site: "he is good with electronics", a recommendation, a thank you, a correction, a joke, a
-drawing of five cats. The submission becomes an issue authored by them. Agents downstream build
-it into the wall in whatever shape fits, and drop the nasty ones.
+Not a contact form. People sign in with GitHub and put something on the wall: "he is good with
+electronics", a recommendation, a thank you, a joke, a drawing of five cats, a pop-up, a game,
+anything. The submission becomes an issue authored by them. Agents downstream build it onto the
+wall the way it was asked for, and the one thing they check is that it is safe.
 
-So the site is partly written by other people, and the vouching is the point: a claim about
-someone carries weight only when it is attached to a real person who made it.
+So part of the site is written by other people. Most contributions carry the contributor's login,
+which is what makes a claim about someone carry weight, but whether an entry on the wall is signed
+is the contributor's call.
 
 ## The wall
 
@@ -19,9 +20,11 @@ three locales. Accepted contributions are shown there, and it is the only way in
 contributor: a single button, **"Write on the wall"**, leads to `/request/`. The home page links
 to the wall from the contact section.
 
-The wall is a surface, not a slot. The decision below not to pre-define a shape for contributed
-content still stands: what an entry looks like on the wall is for the agents downstream to work
-out. Until the first one lands the wall is empty, and says so.
+The wall is a surface, not a slot: an open public wall, like the wall on an old VKontakte profile
+or a street wall people spray graffiti on. No shape is pre-defined for contributed content. An
+entry looks the way its contributor asked, and where they did not say, the agent decides; the
+defaults it starts from are in [wall-entry-format.md](wall-entry-format.md). The first entry went
+up on 2026-09-13, from issue #11.
 
 Three locales, static, no SSR and no secrets on the wall itself. `/request/` and the auth routes
 are the only server-rendered part of the site.
@@ -83,27 +86,23 @@ only appears on a run that finished; a run cut short in the middle is simply ret
 The labels exist in the repository (created 2026-09-13). Where the automation runs and what it is
 built with is deliberately not written down here.
 
-## What downstream takes
+## What goes on the wall
 
 Also out of scope strictly speaking, and recorded for the same reason as moderation: this
 document is the background the downstream agents read, so a stricter bar written here becomes a
 stricter bar applied there. The owner's policy, set 2026-09-13 after the first contribution was
-turned away for being "only an instruction to an agent":
+turned away for being "only an instruction to an agent", and opened up fully on 2026-09-14:
 
-The wall is the graffiti kind of public wall. Visitors may do what they like with it, including
-reshaping the page itself, and that is the point rather than a risk. Downstream is not a taste
-filter, and a contribution owes nobody a justification. Three things keep something off it, and
-nothing else does:
+**Safety is the only check.** Moderation decides it before an agent sees the issue, and the agent
+that builds the entry checks again that what it builds is safe. Nothing else keeps a contribution
+off the wall or changes what it asks for: not taste, not the brand colours, not the layout, not
+the order of entries, not whether it is signed. Colour, animation, media, pop-ups, interactivity,
+breaking out of the frame and moving entries around are all fair game. Odd, silly, loud,
+decorative or thin is not a reason to refuse: a wrong accept is a change somebody can revert, a
+wrong refusal turns a contributor away for good.
 
-- **destructive**: it removes, hides or overwrites what someone else already put on the wall, or
-  damages the site;
-- **negative**: it attacks or demeans anyone, Flop or otherwise;
-- **out of bounds**: it only works by changing something that is not the wall, or it drags in
-  third-party scripts, embeds, remote assets or raw markup from the issue body.
-
-Content safety itself is the `safe` label's job and is settled before an agent sees the issue.
-Odd, silly, decorative or thin is not a reason to refuse: a wrong accept is a drawing somebody can
-revert, a wrong refusal turns a contributor away for good.
+What safe means, and the defaults an agent reaches for when a request leaves something open, are
+written down once, in [wall-entry-format.md](wall-entry-format.md#what-safe-means-here).
 
 Every comment an agent leaves on a wall issue ends with the agent's name and the identifier of
 its Paperclip issue, so a thread on GitHub says which agent answered and where the run behind it
@@ -111,21 +110,23 @@ lives.
 
 ## Three consequences of "other people write the site"
 
-### 1. Attribution is the feature, not a detail
+### 1. Attribution by default, not by force
 
 An unattributed endorsement is worthless. "Someone said he is good with electronics" persuades
-nobody, and a page full of anonymous praise reads as fabricated. Published contributions should
-carry the author's GitHub identity, which is exactly what signing in already gives.
+nobody, and a page full of anonymous praise reads as fabricated. That is why every contribution
+starts as an issue under the contributor's own GitHub account, public whatever happens on the
+wall, and why an entry carries the contributor's login unless they ask otherwise.
 
 This also makes the whole thing self-defending: forging praise costs a real account with a real
-history. Not every contribution is an endorsement, though, and attribution still applies to the
-rest: an entry records who asked for it even when an agent is the one who drew it.
+history. But the wall is not only endorsements, and a contributor who wants their entry unsigned,
+or signed their own way, gets exactly that.
 
-### 2. People must know their words may go public, with their name
+### 2. People must know their words go public
 
 Someone typing "thanks for the help" into a form does not automatically expect it rendered on a
-public site under their handle. The form has to say so plainly, before submission, not in a
-footnote. Whatever downstream decides, this end owes them that sentence.
+public site. The form has to say so plainly, before submission, not in a footnote: the issue is
+public under their login, and the entry on the wall carries the login too unless they ask to
+leave it off. Whatever downstream decides, this end owes them that sentence.
 
 Worth deciding early: what happens when someone later wants their contribution removed.
 
@@ -143,9 +144,10 @@ That freedom is affordable because the limits sit elsewhere and already exist:
   the site unreviewed, and anything that lands can be reverted with its full history intact.
 - **`pnpm verify` is the automatic filter**: lint, real type checking, and a build. An agent can
   restructure whatever it likes as long as the site still compiles.
-- **The i18n contract holds regardless.** The English dictionary defines the shape and the other
-  locales are typed against it, so a contribution added in one language fails the build until all
-  three exist. That constraint survives any amount of improvisation.
+- **The site's own strings stay typed.** The English dictionary defines the shape and the other
+  locales are typed against it, so a caption an agent adds in one locale fails the build until all
+  three exist. A contributor's own words are exempt: they go up as written, in the language they
+  chose.
 
 Which is to say the wikipedia analogy needs its other half: what makes that model work is not
 only many contributors, but full history, easy reverting and someone watching. Git and CI already

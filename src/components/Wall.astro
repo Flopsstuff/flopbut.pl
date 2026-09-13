@@ -28,9 +28,8 @@ const t = useTranslations(locale);
     </a>
 
     {/*
-      Oldest first, newest at the bottom, one <WallEntry> per accepted request. A new
-      contribution is a component under wall/ plus its strings in the dictionaries; nothing
-      already on the wall moves to make room.
+      By default oldest first, newest at the bottom, one <WallEntry> per accepted request. That
+      is only a default: a contribution may restyle, reorder or break out of this list.
     */}
     <ul class="entries">
       <WallEntry locale={locale} author="katyoid" issue={11} date="2026-09-13">
@@ -61,6 +60,19 @@ const t = useTranslations(locale);
     margin: clamp(3rem, 2rem + 4vw, 5rem) 0 0;
     padding: 0;
     display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
     gap: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  }
+
+  @media (min-width: 52rem) {
+    .entries {
+      grid-template-columns: repeat(6, 1fr);
+    }
+
+    /* Each entry publishes --span inline; the breakpoint it depends on lives here, with the grid. */
+    .entries > :global(li) {
+      grid-column: span var(--span, 6);
+    }
   }
 </style>

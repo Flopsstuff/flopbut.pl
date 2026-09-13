@@ -17,6 +17,7 @@ Use a plain hyphen instead.
 
 This applies to all three locales, to code comments, to this file and the README, to commit
 messages and pull request descriptions. Check with `grep -rn "—" src/ docs/` before committing.
+The one exception is a contributor's own words on the wall, which go up as they were written.
 
 ## Name
 
@@ -26,8 +27,9 @@ The only name that appears anywhere public is **Flop Butylkin**. Never substitut
 
 All copy lives in `src/i18n/ui.ts`. The English dictionary defines the shape and the other
 locales are typed against it, so a missing translation is a build error rather than a blank
-line. Tool names in `src/data/stack.ts` and agent names with the model each one runs on in
-`src/data/crew.ts` are not translated.
+line. A contributor's own words on the wall are the exception: they stay in the language they
+were written in and can live in the contribution's component. Tool names in `src/data/stack.ts`
+and agent names with the model each one runs on in `src/data/crew.ts` are not translated.
 
 The roster in `src/data/crew.ts` mirrors the real Paperclip company, so it goes stale whenever
 somebody is hired, retired or moved onto another model. Check it against the live roster
@@ -50,7 +52,8 @@ Two colours, and only two, in the logo, the favicon and the GitHub App badge:
 truth is the token block in `src/styles/global.css` (`--ink`, `--patina`); the same values sit in
 `public/favicon.svg` and the dark `theme-color` meta in `src/layouts/Layout.astro`, so changing
 one means changing all four. The light theme darkens patina to `#0e7159` for contrast in text;
-logos keep `#5fb79b`. Do not introduce new hex values for brand surfaces.
+logos keep `#5fb79b`. Do not introduce new hex values for brand surfaces. Wall entries are not
+brand surfaces: any colour goes there.
 
 ## Stack
 
@@ -123,3 +126,9 @@ a sealed cookie, and an issue filed as the visitor. Design and decisions live in
 `docs/request-to-issue.md`. In dev the secrets come from `.env`; test on `http://localhost:4321`,
 not `127.0.0.1`, because only the former is a registered OAuth callback and cookies do not cross
 hosts.
+
+The wall is open: the only thing checked about a contribution is that it is safe. Colour,
+animation, media, pop-ups, interactivity, breaking out of the frame, reordering entries and leaving
+an entry unsigned are all allowed. What safe means and the defaults for when a request does not
+say: [docs/wall-entry-format.md](docs/wall-entry-format.md). None of those defaults is a reason to
+refuse a request or reshape it.

@@ -134,8 +134,8 @@ const en = {
       request: 'request',
     },
     /*
-      One block per published entry, newest last, keyed the same way as the component
-      under components/wall/ that draws it.
+      Captions an agent writes for an entry, keyed like the component under components/wall/
+      that draws it. A contributor's own words do not have to live here.
     */
     entries: {
       fiveCats: {
@@ -175,7 +175,7 @@ const en = {
     relationLabel: 'How do you know Flop?',
     relationHint: 'Optional. A few words: worked together at X, met at Y.',
     publicNotice:
-      'Sending creates a public issue on GitHub in your name. Whatever ends up on the wall carries it too.',
+      'Sending creates a public issue on GitHub in your name. On the wall your login goes next to it too, unless you ask to leave it off.',
     submit: 'Send',
     back: 'Back to the wall',
     unavailable: {
@@ -372,7 +372,7 @@ const ru: Dictionary = {
     relationLabel: 'Откуда вы знаете Флопа?',
     relationHint: 'Необязательно. Пара слов: работали вместе в X, познакомились на Y.',
     publicNotice:
-      'Отправка создаёт публичный issue на GitHub от вашего имени. Всё, что попадёт на стену, тоже будет подписано вами.',
+      'Отправка создаёт публичный issue на GitHub от вашего имени. На стене рядом с записью тоже будет ваш логин, если не попросите его убрать.',
     submit: 'Отправить',
     back: 'Назад на стену',
     unavailable: {
@@ -562,7 +562,7 @@ const pl: Dictionary = {
     relationLabel: 'Skąd znasz Flopa?',
     relationHint: 'Opcjonalnie. Kilka słów: pracowaliśmy razem w X, poznaliśmy się na Y.',
     publicNotice:
-      'Wysłanie tworzy publiczne issue na GitHubie w Twoim imieniu. Wszystko, co trafi na ścianę, też będzie podpisane Tobą.',
+      'Wysłanie tworzy publiczne issue na GitHubie w Twoim imieniu. Na ścianie wpis też będzie podpisany Twoim loginem, chyba że poprosisz, żeby go pominąć.',
     submit: 'Wyślij',
     back: 'Wróć na ścianę',
     unavailable: {
