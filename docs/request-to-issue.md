@@ -1,6 +1,6 @@
 # Draft: signed-in form where people contribute content about Flop
 
-Status: **built, tested with the owner's account only**. Written 2026-08-08, revised 2026-09-13.
+Status: **live; tested with a second account**. Written 2026-08-08, revised 2026-09-13.
 
 ## What this actually is
 
@@ -29,7 +29,9 @@ are the only server-rendered part of the site.
 ## Scope
 
 This side **ends when the issue exists**. Classification, deciding what goes on the site, writing
-the copy and dropping abuse all happen downstream and are out of scope here.
+the copy and dropping abuse all happen downstream and are out of scope here. The one piece of
+downstream this document does record is moderation, below, because it acts as the same GitHub
+App and changed a decision made here.
 
 ```
 /wall/
@@ -43,8 +45,43 @@ the copy and dropping abuse all happen downstream and are out of scope here.
    -> issue in Flopsstuff/flopbut.pl, authored by the user
    -> /request/?sent=N             thanks, with a link to the issue
    (  POST /api/auth/logout        drops the cookie; www and workers.dev redirect to the apex  )
-   -> [ agents downstream: classify, decide, publish or close ]
+   -> label-wall.yml: label wall and needs-review, PUT the issue to the webhook
+   -> moderation: safe / unsafe / needs-review, as the app          (see "Moderation")
+   -> [ agents downstream: take open wall + safe issues, decide, publish ]
 ```
+
+## Moderation
+
+The automation behind the webhook runs every new wall issue through a content-safety model with
+a wall-specific policy: nothing that removes or blanks existing content, nothing that goes after
+a person, nothing that tells the agents to break their rules. It then acts on the issue **as the
+flopbut-pl GitHub App**, so GitHub shows `flopbut-pl[bot]` and not the owner:
+
+- **safe**: label `safe`. Downstream agents only pick up issues that are open and carry both
+  `wall` and `safe`, so they never race the check.
+- **unsafe**: a comment in the contributor's locale saying the request was closed and that
+  replying is how to dispute it, then label `unsafe` and close as *not planned*. No lock: a
+  non-collaborator cannot reopen an issue, so a reply is their only way to reach the owner when
+  the model is wrong. The comment ends with a hidden `<!-- wall-moderation v1 ... -->` marker
+  carrying the model's categories.
+- **no verdict** (the model ran out of tokens or answered off format): `needs-review` stays and
+  the issue stays open for a person.
+
+`needs-review` is there from the start: `label-wall.yml` adds it together with `wall` the moment
+the issue appears, before moderation runs, and moderation takes it off once it reaches safe or
+unsafe. So an issue moderation never got to, because the model or the automation was down, is
+not silently stuck with only `wall`; it is visibly waiting for a person. The form itself cannot
+add it, for the same reason it cannot add `wall`.
+
+**Reruns are safe.** Rerunning `label-wall.yml` for an issue sends it to the webhook again, and
+a second model call could disagree with the first. So before the model is called, moderation
+reads the issue and stops if it already carries `safe` or `unsafe`. `needs-review` does not stop
+it, which makes a rerun the way to settle one, and a safe or unsafe outcome removes
+`needs-review`. For unsafe the close and the comment come first and the label last, so the label
+only appears on a run that finished; a run cut short in the middle is simply retried.
+
+The labels exist in the repository (created 2026-09-13). Where the automation runs and what it is
+built with is deliberately not written down here.
 
 ## Three consequences of "other people write the site"
 
@@ -100,9 +137,14 @@ person owns, which is absurd for filing one issue. A GitHub App's user token can
 app is allowed to do *and* the user is allowed to do, and the app is installed on exactly one
 repository. Any GitHub account can open an issue in a public repository, so strangers qualify.
 
-Because it is the user-authorization flow and not app-authentication, only the **client id and
-client secret** are needed. The app's private key is never used and does not need to leave
-GitHub.
+Because it is the user-authorization flow and not app-authentication, the form only needs the
+**client id and client secret**; the site never holds the app's private key.
+
+Revised 2026-09-13: moderation acts as the app itself, which does need the private key. It lives
+only in the moderation automation's own credential store, never in this repository, its secrets
+or the worker. Each run signs a short JWT, asks for an installation token and narrows that token
+to `issues: write` on this one repository, so the key's reach is closing and labelling issues
+here and nothing else.
 
 **The form is only reachable after sign-in.** The alternative, form first and the issue created
 straight from the callback with a token that lives for seconds, would remove the session cookie
@@ -194,9 +236,16 @@ App**, not under the personal account.
 7. **Webhook**: untick *Active*. Nothing here listens; leaving it on forces a webhook URL.
 8. **Repository permissions**: *Issues* -> **Read and write**. *Metadata* becomes read-only on
    its own. Nothing else, and no account permissions at all.
-9. **Where can this GitHub App be installed?**: *Only on this account*.
+9. **Where can this GitHub App be installed?**: *Any account*, which makes the app public.
+   *Only on this account* was the first choice and it was wrong: a private app can only be
+   authorized by members of the owning organization, so on 2026-09-13 a second account got a
+   404 on GitHub's authorize page. Public only means others could install the app on their own
+   repositories, where it does nothing; this installation and its tokens stay limited to
+   `flopbut.pl`. An existing app is switched under *Advanced -> Make public*.
 10. Create, then on the app page: copy the **Client ID** and **Generate a new client secret**;
-    the secret is shown once. Skip *Generate a private key*.
+    the secret is shown once. *Generate a private key* was skipped at first; moderation needed
+    one on 2026-09-13 (see "Moderation"), and the `.pem` went straight into the automation's
+    credential store.
 11. **Install App** in the left menu -> `Flopsstuff` -> *Only select repositories* ->
     `flopbut.pl`.
 12. Put the secrets in `.env`, then `gh secret set -f .env` once: `GH_APP_CLIENT_ID`,
@@ -204,22 +253,19 @@ App**, not under the personal account.
     The next deploy uploads them to the worker.
     Done 2026-09-09.
 
-**Prove the model with a second account. This gates the public launch.** Sign in with an
-account that is not a member of `Flopsstuff` and submit the form on the deployed site. If an
-issue appears, authored by that account and stamped with the app, the model holds. If GitHub
-refuses, the form shows "GitHub did not accept the note" with the text kept and the log carries
-the status and GitHub's message (`[wall] GitHub POST ... -> 403: ...`); then the assumption that
-non-collaborators can file issues through the app was wrong and the design has to change before
-the wall is linked or announced anywhere. There was no second account to hand on 2026-09-13, so
-the flow was built and tested with the owner's account only. Record the result here, with the
-date and the issue number, when the test is done.
+**Prove the model with a second account.** Done 2026-09-13, issue #11: an account outside
+`Flopsstuff` (author association `NONE`) signed in on the deployed site and filed a request. The
+issue carries that account as author and the app in `performed_via_github_app`; the label workflow
+added `wall` and moderation added `safe`. Non-collaborators can file issues through the app, so
+the model holds. The first attempt had failed earlier, with a 404 on GitHub's authorize page,
+because the app was still private (see checklist step 9).
 
 ## Suggested order of work
 
 0. Empty `/wall/` in three locales with the button, `/request/` as a "coming soon" stub, link
    from the home page. Done 2026-09-13.
-1. Register and install the GitHub App, store the secrets. Done 2026-09-09. The second-account
-   test is still pending.
+1. Register and install the GitHub App, store the secrets. Done 2026-09-09. Second-account test
+   passed 2026-09-13.
 2. `/request/` replaces the stub: signed-out and signed-in states, and the sentence about
    publication. Done 2026-09-13.
 3. OAuth round trip: `/api/auth/login`, `/api/auth/callback`, `state` check, session cookie.
@@ -235,8 +281,8 @@ No LLM on this side, and nothing here depends on the downstream design being set
 
 - **What does the form ask?** Decided 2026-09-13: one free text field (20 to 4000 characters)
   plus an optional line on how the person knows Flop. No category: agents classify.
-- **Can a non-collaborator file an issue through the app?** Untested, see the second-account
-  check above. Everything else is built on the assumption that they can.
+- **Can a non-collaborator file an issue through the app?** Yes, once the app is public: issue #11,
+  2026-09-13.
 - Removal: if a contributor asks for their entry to be taken down, what is the path?
 - Does a published contribution link back to its issue, so the provenance is checkable?
 - What does an entry look like on the wall: author, date, the text, a link to the issue? Left to
