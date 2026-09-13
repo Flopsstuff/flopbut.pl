@@ -61,23 +61,23 @@ export async function handleRequest(
     if ('error' in parsed) return signedIn(parsed.fields, parsed.error, 400);
     const fields = parsed.fields;
 
+    /* The token died before the cookie did (revoked, or the app uninstalled): end the session. */
+    const expired = (): RequestView => {
+      clearCookie(Astro.cookies, SESSION_COOKIE, Astro.url);
+      Astro.response.status = 401;
+      return { state: 'signedOut', error: 'expired' };
+    };
+
     if (!RATE_LIMIT_EXEMPT.includes(session.login)) {
       const since = new Date(Date.now() - 60 * 60 * 1000);
       const recent = await countRecentIssues(session.token, session.login, since);
-      if (recent === null) return signedIn(fields, 'github', 502);
-      if (recent >= LIMITS.perHour) return signedIn(fields, 'rateLimited', 429);
+      if (!recent.ok) return recent.status === 401 ? expired() : signedIn(fields, 'github', 502);
+      if (recent.count >= LIMITS.perHour) return signedIn(fields, 'rateLimited', 429);
     }
 
     const issue = renderIssue({ login: session.login, locale, ...fields });
     const result = await createIssue(session.token, issue);
-    if (!result.ok) {
-      if (result.status === 401) {
-        clearCookie(Astro.cookies, SESSION_COOKIE, Astro.url);
-        Astro.response.status = 401;
-        return { state: 'signedOut', error: 'expired' };
-      }
-      return signedIn(fields, 'github', 502);
-    }
+    if (!result.ok) return result.status === 401 ? expired() : signedIn(fields, 'github', 502);
 
     return Astro.redirect(localizedPath(locale, `/request/?sent=${result.number}`), 303);
   }

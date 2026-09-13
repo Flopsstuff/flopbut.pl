@@ -75,33 +75,37 @@ export async function fetchViewer(token: string): Promise<{ login: string } | nu
   return { login: data.login };
 }
 
+export type CountResult = { ok: true; count: number } | { ok: false; status: number };
+
 /**
  * Issues this login opened in the repository since `since`. The list endpoint rather than
  * search: it is real time, and search with a user token needs `is:issue` and has its own,
- * much smaller, rate limit. Null when GitHub did not answer.
+ * much smaller, rate limit. The status comes back on failure so a 401 (token revoked, cookie
+ * still alive) can end the session rather than read as a GitHub hiccup.
  */
 export async function countRecentIssues(
   token: string,
   login: string,
   since: Date,
-): Promise<number | null> {
+): Promise<CountResult> {
   const url = new URL(`${API}/repos/${REPO.owner}/${REPO.name}/issues`);
   url.searchParams.set('creator', login);
   url.searchParams.set('state', 'all');
   url.searchParams.set('since', since.toISOString());
   url.searchParams.set('per_page', '10');
   const response = await gh(url.href, token);
-  if (!response.ok) return null;
+  if (!response.ok) return { ok: false, status: response.status };
   const data: unknown = await response.json();
-  if (!Array.isArray(data)) return null;
+  if (!Array.isArray(data)) return { ok: false, status: 502 };
   const cutoff = since.getTime();
-  return data.filter(
+  const count = data.filter(
     (item) =>
       isRecord(item) &&
       !('pull_request' in item) &&
       typeof item.created_at === 'string' &&
       Date.parse(item.created_at) >= cutoff,
   ).length;
+  return { ok: true, count };
 }
 
 export type CreateIssueResult =
