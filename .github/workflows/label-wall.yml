@@ -1,0 +1,25 @@
+name: Label wall requests
+
+# The form cannot set labels itself: GitHub drops them for authors without push access,
+# which is every contributor this form exists for. So the repository does it on arrival,
+# keyed on the marker the form writes as the first line of every issue body.
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  label:
+    name: Add the wall label
+    if: startsWith(github.event.issue.body, '<!-- wall-request v1 -->')
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+
+    steps:
+      - run: gh issue edit "$NUMBER" --repo "$REPO" --add-label wall
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}

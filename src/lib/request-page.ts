@@ -1,5 +1,5 @@
 import type { AstroGlobal } from 'astro';
-import type { Locale } from '../config.ts';
+import { type Locale, RATE_LIMIT_EXEMPT } from '../config.ts';
 import { localizedPath } from '../i18n/utils.ts';
 import { countRecentIssues, createIssue, renderIssue } from './github.ts';
 import { readSecrets } from './secrets.ts';
@@ -61,10 +61,12 @@ export async function handleRequest(
     if ('error' in parsed) return signedIn(parsed.fields, parsed.error, 400);
     const fields = parsed.fields;
 
-    const since = new Date(Date.now() - 60 * 60 * 1000);
-    const recent = await countRecentIssues(session.token, session.login, since);
-    if (recent === null) return signedIn(fields, 'github', 502);
-    if (recent >= LIMITS.perHour) return signedIn(fields, 'rateLimited', 429);
+    if (!RATE_LIMIT_EXEMPT.includes(session.login)) {
+      const since = new Date(Date.now() - 60 * 60 * 1000);
+      const recent = await countRecentIssues(session.token, session.login, since);
+      if (recent === null) return signedIn(fields, 'github', 502);
+      if (recent >= LIMITS.perHour) return signedIn(fields, 'rateLimited', 429);
+    }
 
     const issue = renderIssue({ login: session.login, locale, ...fields });
     const result = await createIssue(session.token, issue);

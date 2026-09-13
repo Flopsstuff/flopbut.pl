@@ -125,12 +125,18 @@ search: it is real time, and search with a GitHub App user token needs `is:issue
 own, much smaller, quota. The list lags a second or two behind a write, so a burst of
 submissions inside that window slips past the cap (seen on 2026-09-13: three in two seconds
 went through, the next one was refused). That is the price of having no storage; GitHub's own
-abuse limits sit behind it as the backstop.
+abuse limits sit behind it as the backstop. Logins in `RATE_LIMIT_EXEMPT` (`src/config.ts`)
+skip the check: the owner, testing his own form.
 
 **The page handles its own POST.** A separate `/api/request` could only redirect after a
 failure, and the text would be gone with it. `/request/` is server-rendered, reads the cookie,
 and on POST validates, creates the issue and either redirects to `?sent=N` or renders the form
 again with the text still in it.
+
+**The `wall` label is added by the repository, not by the form.** GitHub drops `labels` on
+issue creation for authors without push access, which is every contributor this form exists
+for. `.github/workflows/label-wall.yml` adds it on `issues: opened` when the body starts with
+the marker below, so downstream can filter on `label:wall` rather than on the title.
 
 ## The issue is a contract
 
