@@ -1,6 +1,6 @@
 # Draft: signed-in form where people contribute content about Flop
 
-Status: **built, tested with the owner's account only**. Written 2026-08-08, revised 2026-09-13.
+Status: **live; tested with a second account**. Written 2026-08-08, revised 2026-09-13.
 
 ## What this actually is
 
@@ -240,22 +240,19 @@ App**, not under the personal account.
     The next deploy uploads them to the worker.
     Done 2026-09-09.
 
-**Prove the model with a second account. This gates the public launch.** Sign in with an
-account that is not a member of `Flopsstuff` and submit the form on the deployed site. If an
-issue appears, authored by that account and stamped with the app, the model holds. If GitHub
-refuses, the form shows "GitHub did not accept the note" with the text kept and the log carries
-the status and GitHub's message (`[wall] GitHub POST ... -> 403: ...`); then the assumption that
-non-collaborators can file issues through the app was wrong and the design has to change before
-the wall is linked or announced anywhere. There was no second account to hand on 2026-09-13, so
-the flow was built and tested with the owner's account only. Record the result here, with the
-date and the issue number, when the test is done.
+**Prove the model with a second account.** Done 2026-09-13, issue #11: an account outside
+`Flopsstuff` (author association `NONE`) signed in on the deployed site and filed a request. The
+issue carries that account as author and the app in `performed_via_github_app`; the label workflow
+added `wall` and moderation added `safe`. Non-collaborators can file issues through the app, so
+the model holds. The first attempt had failed earlier, with a 404 on GitHub's authorize page,
+because the app was still private (see checklist step 9).
 
 ## Suggested order of work
 
 0. Empty `/wall/` in three locales with the button, `/request/` as a "coming soon" stub, link
    from the home page. Done 2026-09-13.
-1. Register and install the GitHub App, store the secrets. Done 2026-09-09. The second-account
-   test is still pending.
+1. Register and install the GitHub App, store the secrets. Done 2026-09-09. Second-account test
+   passed 2026-09-13.
 2. `/request/` replaces the stub: signed-out and signed-in states, and the sentence about
    publication. Done 2026-09-13.
 3. OAuth round trip: `/api/auth/login`, `/api/auth/callback`, `state` check, session cookie.
@@ -271,8 +268,8 @@ No LLM on this side, and nothing here depends on the downstream design being set
 
 - **What does the form ask?** Decided 2026-09-13: one free text field (20 to 4000 characters)
   plus an optional line on how the person knows Flop. No category: agents classify.
-- **Can a non-collaborator file an issue through the app?** Untested, see the second-account
-  check above. Everything else is built on the assumption that they can.
+- **Can a non-collaborator file an issue through the app?** Yes, once the app is public: issue #11,
+  2026-09-13.
 - Removal: if a contributor asks for their entry to be taken down, what is the path?
 - Does a published contribution link back to its issue, so the provenance is checkable?
 - What does an entry look like on the wall: author, date, the text, a link to the issue? Left to
