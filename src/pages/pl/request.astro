@@ -2,10 +2,15 @@
 import Request from '../../components/Request.astro';
 import { useTranslations } from '../../i18n/utils.ts';
 import Layout from '../../layouts/Layout.astro';
+import { handleRequest } from '../../lib/request-page.ts';
 
+export const prerender = false;
+
+const view = await handleRequest(Astro, 'pl');
+if (view instanceof Response) return view;
 const t = useTranslations('pl');
 ---
 
 <Layout locale="pl" title={t.request.meta.title} description={t.request.meta.description} noIndex>
-  <Request locale="pl" />
+  <Request locale="pl" view={view} />
 </Layout>

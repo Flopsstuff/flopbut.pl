@@ -64,7 +64,8 @@ export default defineConfig({
 
   integrations: [
     sitemap({
-      // The request stub is noindex until the form exists; keep it out of the sitemap too.
+      // The request form is per-person and noindex. It is SSR now, so the sitemap would skip
+      // it anyway; the filter stays so that stays true even if the route is prerendered again.
       filter: (page) => !page.includes('/request/'),
       i18n: {
         defaultLocale: DEFAULT_LOCALE,

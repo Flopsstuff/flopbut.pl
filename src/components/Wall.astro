@@ -20,7 +20,7 @@ const t = useTranslations(locale);
     <h1 class="title">{t.wall.title}</h1>
     <p class="prose">{t.wall.body}</p>
 
-    <a class="button" href={localizedPath(locale, '/request/')}>
+    <a class="button cta" href={localizedPath(locale, '/request/')}>
       <span>{t.wall.cta}</span>
       <span class="button-arrow" aria-hidden="true">→</span>
     </a>
@@ -42,34 +42,8 @@ const t = useTranslations(locale);
     margin-block: 1.5rem 1.25rem;
   }
 
-  .button {
-    display: inline-flex;
-    align-items: center;
-    gap: 1rem;
+  .cta {
     margin-top: 2.5rem;
-    padding: 1rem 1.5rem;
-    border: 1px solid var(--line-strong);
-    font-family: var(--font-display), var(--font-fallback-sans);
-    font-size: var(--step-1);
-    letter-spacing: -0.01em;
-    text-decoration: none;
-    transition:
-      border-color 0.2s ease,
-      background-color 0.2s ease;
-  }
-
-  .button:hover {
-    border-color: var(--patina);
-    background-color: var(--surface);
-  }
-
-  .button-arrow {
-    color: var(--patina);
-    transition: transform 0.2s ease;
-  }
-
-  .button:hover .button-arrow {
-    transform: translateX(0.35rem);
   }
 
   .empty {

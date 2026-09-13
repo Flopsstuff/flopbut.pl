@@ -1,26 +1,143 @@
 ---
-import type { Locale } from '../config.ts';
+import { LINKS, type Locale } from '../config.ts';
 import { localizedPath, useTranslations } from '../i18n/utils.ts';
+import { LIMITS, type RequestView } from '../lib/request-page.ts';
 import Footer from './Footer.astro';
 import Header from './Header.astro';
 
+/** Pure view. The page decides the state (see src/lib/request-page.ts); this only draws it. */
 interface Props {
   locale: Locale;
+  view: RequestView;
 }
 
-const { locale } = Astro.props;
+const { locale, view } = Astro.props;
 const t = useTranslations(locale);
+const wall = localizedPath(locale, '/wall/');
 ---
 
 <Header locale={locale} />
 
 <main id="main" class="request">
   <div class="page">
-    <p class="label">{t.request.eyebrow}</p>
-    <h1 class="title">{t.request.title}</h1>
-    <p class="prose">{t.request.body}</p>
+    {
+      view.state === 'unavailable' && (
+        <>
+          <p class="label">{t.request.eyebrow}</p>
+          <h1 class="title">{t.request.unavailable.title}</h1>
+          <p class="prose">{t.request.unavailable.body}</p>
+        </>
+      )
+    }
 
-    <a class="back" href={localizedPath(locale, '/wall/')}>
+    {
+      view.state === 'signedOut' && (
+        <>
+          <p class="label">{t.request.eyebrow}</p>
+          <h1 class="title">{t.request.title}</h1>
+          <p class="prose">{t.request.intro}</p>
+          {view.error && (
+            <p class="error" role="alert">
+              {t.request.errors[view.error]}
+            </p>
+          )}
+          <a class="button cta" href={`/api/auth/login?locale=${locale}`}>
+            <span>{t.request.signIn}</span>
+            <span class="button-arrow" aria-hidden="true">→</span>
+          </a>
+        </>
+      )
+    }
+
+    {
+      view.state === 'signedIn' && (
+        <>
+          <p class="label">{t.request.eyebrow}</p>
+          <h1 class="title">{t.request.title}</h1>
+
+          <div class="identity">
+            <img
+              class="avatar"
+              src={`https://github.com/${view.login}.png?size=64`}
+              alt=""
+              width="32"
+              height="32"
+              loading="lazy"
+            />
+            <p>
+              {t.request.signedInAs} <strong>@{view.login}</strong>
+            </p>
+            <form method="post" action="/api/auth/logout">
+              <input type="hidden" name="locale" value={locale} />
+              <button class="link-button" type="submit">
+                {t.request.signOut}
+              </button>
+            </form>
+          </div>
+
+          {view.error && (
+            <p class="error" role="alert">
+              {t.request.errors[view.error]}
+            </p>
+          )}
+
+          <form class="form" method="post" action={localizedPath(locale, '/request/')}>
+            <div class="field">
+              <label for="text">{t.request.textLabel}</label>
+              <p class="hint" id="text-hint">
+                {t.request.textHint}
+              </p>
+              <textarea
+                id="text"
+                name="text"
+                rows="8"
+                required
+                minlength={LIMITS.text.min}
+                maxlength={LIMITS.text.max}
+                aria-describedby="text-hint">{view.text}</textarea>
+            </div>
+
+            <div class="field">
+              <label for="relation">{t.request.relationLabel}</label>
+              <p class="hint" id="relation-hint">
+                {t.request.relationHint}
+              </p>
+              <input
+                id="relation"
+                name="relation"
+                type="text"
+                maxlength={LIMITS.relation}
+                value={view.relation}
+                aria-describedby="relation-hint"
+              />
+            </div>
+
+            <p class="prose notice">{t.request.publicNotice}</p>
+
+            <button class="button" type="submit">
+              <span>{t.request.submit}</span>
+              <span class="button-arrow" aria-hidden="true">→</span>
+            </button>
+          </form>
+        </>
+      )
+    }
+
+    {
+      view.state === 'sent' && (
+        <>
+          <p class="label">{t.request.sent.eyebrow}</p>
+          <h1 class="title">{t.request.sent.title}</h1>
+          <p class="prose">{t.request.sent.body}</p>
+          <a class="button cta" href={`${LINKS.repo}/issues/${view.number}`}>
+            <span>{t.request.sent.issue}</span>
+            <span class="button-arrow" aria-hidden="true">→</span>
+          </a>
+        </>
+      )
+    }
+
+    <a class="back" href={wall}>
       <span class="back-arrow" aria-hidden="true">←</span>
       <span>{t.request.back}</span>
     </a>
@@ -39,11 +156,123 @@ const t = useTranslations(locale);
     margin-block: 1.5rem 1.25rem;
   }
 
+  .cta {
+    margin-top: 2.5rem;
+  }
+
+  .error {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1rem;
+    border-left: 2px solid var(--brass);
+    color: var(--text);
+    max-width: var(--measure);
+  }
+
+  /* ---- signed in ---- */
+
+  .identity {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    margin-top: 2rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--line);
+    background-color: var(--surface);
+    max-width: var(--measure);
+  }
+
+  .avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background-color: var(--surface-raised);
+  }
+
+  .identity form {
+    margin-left: auto;
+  }
+
+  .link-button {
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid var(--line-strong);
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: var(--step--1);
+  }
+
+  .link-button:hover {
+    color: var(--text);
+    border-bottom-color: var(--patina);
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    margin-top: 2rem;
+    max-width: var(--measure);
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .field label {
+    font-family: var(--font-display), var(--font-fallback-sans);
+    font-size: var(--step-1);
+    letter-spacing: -0.01em;
+  }
+
+  .hint {
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  textarea,
+  input[type='text'] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 0;
+    background-color: var(--surface);
+    color: var(--text);
+    font: inherit;
+    line-height: 1.5;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 10rem;
+  }
+
+  textarea:focus-visible,
+  input[type='text']:focus-visible {
+    outline: none;
+    border-color: var(--patina);
+  }
+
+  .notice {
+    font-size: var(--step--1);
+  }
+
+  .form .button {
+    align-self: flex-start;
+  }
+
+  /* ---- back link ---- */
+
   .back {
-    display: inline-flex;
+    display: flex;
+    width: max-content;
     align-items: center;
     gap: 0.5rem;
-    margin-top: 2.5rem;
+    margin-top: 3rem;
     font-family: var(--font-mono), ui-monospace, monospace;
     font-size: var(--step--1);
     text-decoration: none;
