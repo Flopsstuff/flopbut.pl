@@ -40,7 +40,18 @@ function parseArgs(argv) {
   return { url: positional[0], out: resolve(positional[1]), ...options };
 }
 
-function launch(profileDir) {
+// A binary that is not installed reports itself through an 'error' event on the next tick, not
+// through a missing pid, and an 'error' nobody listens for is an uncaught exception. The listener
+// stays on for the child's whole life, because a kill that fails raises the same event.
+function trySpawn(binary, flags) {
+  return new Promise((fulfil) => {
+    const child = spawn(binary, flags, { stdio: ['ignore', 'ignore', 'pipe'] });
+    child.on('error', () => fulfil(null));
+    child.once('spawn', () => fulfil(child));
+  });
+}
+
+async function launch(profileDir) {
   const flags = [
     '--headless=new',
     '--disable-gpu',
@@ -51,10 +62,10 @@ function launch(profileDir) {
     'about:blank',
   ];
   for (const binary of BROWSERS) {
-    const child = spawn(binary, flags, { stdio: ['ignore', 'ignore', 'pipe'] });
-    if (child.pid) return waitForEndpoint(child);
+    const child = await trySpawn(binary, flags);
+    if (child) return child;
   }
-  return Promise.reject(new Error(`No browser found, tried: ${BROWSERS.join(', ')}`));
+  throw new Error(`No browser found, tried: ${BROWSERS.join(', ')}`);
 }
 
 function waitForEndpoint(child) {
@@ -66,12 +77,26 @@ function waitForEndpoint(child) {
       const match = stderr.match(/ws:\/\/[^\s]+/);
       if (!match) return;
       clearTimeout(timer);
-      fulfil({ child, browserSocket: match[0] });
+      fulfil(match[0]);
     });
     child.on('exit', (code) => {
       clearTimeout(timer);
       reject(new Error(`Browser exited with ${code}:\n${stderr}`));
     });
+  });
+}
+
+// A browser that died on its own emits no second 'exit', and one that ignores the term never
+// emits a first: either way, waiting on the event alone is a wait that can last forever.
+function stop(child) {
+  if (child.exitCode !== null || child.signalCode !== null) return Promise.resolve();
+  return new Promise((done) => {
+    const forced = setTimeout(() => child.kill('SIGKILL'), 2_000);
+    child.once('exit', () => {
+      clearTimeout(forced);
+      done();
+    });
+    child.kill();
   });
 }
 
@@ -82,6 +107,7 @@ function connect(endpoint) {
     const pending = new Map();
     const listeners = new Map();
     let nextId = 1;
+    let closed = null;
     socket.addEventListener('message', (event) => {
       const message = JSON.parse(event.data);
       if (message.id && pending.has(message.id)) {
@@ -98,9 +124,19 @@ function connect(endpoint) {
       }
     });
     socket.addEventListener('error', () => reject(new Error(`CDP connection failed: ${endpoint}`)));
+    // A browser that dies mid-capture takes the socket with it. Without this every command still
+    // in flight stays pending for good, the event loop empties, and node walks out on an
+    // unsettled await - past the cleanup that would have killed the browser and swept the profile.
+    socket.addEventListener('close', () => {
+      closed = new Error(`CDP connection closed: ${endpoint}`);
+      for (const waiting of pending.values()) waiting.reject(closed);
+      pending.clear();
+      reject(closed);
+    });
     socket.addEventListener('open', () =>
       fulfil({
         send(method, params = {}) {
+          if (closed) return Promise.reject(closed);
           const id = nextId;
           nextId += 1;
           socket.send(JSON.stringify({ id, method, params }));
@@ -171,9 +207,11 @@ async function capture(page, { url, width, dpr, wait, selector, theme }) {
 
 const options = parseArgs(process.argv.slice(2));
 const profileDir = await mkdtemp(join(tmpdir(), 'flopbut-shot-'));
-const { child, browserSocket } = await launch(profileDir);
+let child;
 let browser;
 try {
+  child = await launch(profileDir);
+  const browserSocket = await waitForEndpoint(child);
   browser = await connect(browserSocket);
   const { targetId } = await browser.send('Target.createTarget', { url: 'about:blank' });
   const targets = await fetch(
@@ -190,8 +228,6 @@ try {
   );
 } finally {
   browser?.close();
-  const stopped = new Promise((done) => child.once('exit', done));
-  child.kill();
-  await stopped;
+  if (child) await stop(child);
   await rm(profileDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
 }
