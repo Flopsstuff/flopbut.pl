@@ -1,0 +1,60 @@
+---
+import type { Locale } from '../config.ts';
+import { localizedPath, useTranslations } from '../i18n/utils.ts';
+import Footer from './Footer.astro';
+import Header from './Header.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<Header locale={locale} />
+
+<main id="main" class="request">
+  <div class="page">
+    <p class="label">{t.request.eyebrow}</p>
+    <h1 class="title">{t.request.title}</h1>
+    <p class="prose">{t.request.body}</p>
+
+    <a class="back" href={localizedPath(locale, '/wall/')}>
+      <span class="back-arrow" aria-hidden="true">←</span>
+      <span>{t.request.back}</span>
+    </a>
+  </div>
+</main>
+
+<Footer locale={locale} />
+
+<style>
+  .request {
+    padding-block: clamp(4rem, 3rem + 6vw, 9rem);
+  }
+
+  .title {
+    font-size: var(--step-5);
+    margin-block: 1.5rem 1.25rem;
+  }
+
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2.5rem;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: var(--step--1);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .back:hover {
+    border-bottom-color: var(--patina);
+  }
+
+  .back-arrow {
+    color: var(--patina);
+  }
+</style>

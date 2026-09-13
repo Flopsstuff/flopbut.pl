@@ -1,19 +1,26 @@
 ---
 import { Font } from 'astro:assets';
-import { type Locale, SITE_URL } from '../config.ts';
+import { DEFAULT_LOCALE, type Locale, SITE_URL } from '../config.ts';
 import { alternateLinks, useTranslations } from '../i18n/utils.ts';
 import '../styles/global.css';
 
 interface Props {
   locale: Locale;
+  /** Per-page title and description; the home page values from the dictionary otherwise. */
+  title?: string;
+  description?: string;
   /** Error pages: skip indexing and skip hreflang, which would advertise routes that do not exist. */
   noIndex?: boolean;
 }
 
 const { locale, noIndex = false } = Astro.props;
 const t = useTranslations(locale);
+const title = Astro.props.title ?? t.meta.title;
+const description = Astro.props.description ?? t.meta.description;
 const alternates = noIndex ? [] : alternateLinks(locale, Astro.url);
 const canonical = new URL(Astro.url.pathname, SITE_URL);
+/* x-default is the English variant of the current page, not the site root. */
+const xDefault = alternates.find((alt) => alt.locale === DEFAULT_LOCALE)?.path ?? '/';
 
 /*
   Preload only what paints first, in the alphabet this page is actually written in:
@@ -28,8 +35,8 @@ const fontSubset = locale === 'ru' ? 'cyrillic' : 'latin';
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{t.meta.title}</title>
-    <meta name="description" content={t.meta.description} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
     <link rel="canonical" href={canonical.href} />
 
     {
@@ -37,12 +44,12 @@ const fontSubset = locale === 'ru' ? 'cyrillic' : 'latin';
         <link rel="alternate" hreflang={alt} href={new URL(path, SITE_URL).href} />
       ))
     }
-    {!noIndex && <link rel="alternate" hreflang="x-default" href={new URL('/', SITE_URL).href} />}
+    {!noIndex && <link rel="alternate" hreflang="x-default" href={new URL(xDefault, SITE_URL).href} />}
     {noIndex && <meta name="robots" content="noindex" />}
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content={t.meta.title} />
-    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical.href} />
     <meta property="og:locale" content={locale} />
     {/* Square portrait, so the small card is the right shape for it. */}

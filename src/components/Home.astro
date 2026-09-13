@@ -3,8 +3,9 @@ import { Image } from 'astro:assets';
 import portrait from '../assets/flop.jpg';
 import { LINKS, type Locale } from '../config.ts';
 import { STACK_GROUPS, stack } from '../data/stack.ts';
-import { useTranslations } from '../i18n/utils.ts';
+import { localizedPath, useTranslations } from '../i18n/utils.ts';
 import Crew from './Crew.astro';
+import Footer from './Footer.astro';
 import Header from './Header.astro';
 
 interface Props {
@@ -29,6 +30,7 @@ const contacts = [
   { label: t.contact.email, value: 'flopspm@gmail.com', href: 'mailto:flopspm@gmail.com' },
   { label: t.contact.github, value: 'Flopsstuff', href: LINKS.github },
   { label: t.contact.linkedin, value: 'flop-but', href: LINKS.linkedin },
+  { label: t.contact.wall, value: t.wall.cta, href: localizedPath(locale, '/wall/') },
 ];
 ---
 
@@ -183,13 +185,7 @@ const contacts = [
   </section>
 </main>
 
-<footer class="footer">
-  <hr class="rule" />
-  <div class="page footer-inner">
-    <p class="label">{t.footer.built}</p>
-    <a class="label footer-source" href={LINKS.repo}>{t.footer.source}</a>
-  </div>
-</footer>
+<Footer locale={locale} />
 
 <style>
   .hero {
@@ -508,31 +504,6 @@ const contacts = [
 
   .contact-label {
     min-width: 8rem;
-  }
-
-  /* ---- footer ---- */
-
-  .footer {
-    padding-bottom: 3rem;
-  }
-
-  .footer-inner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem 1.5rem;
-    padding-top: 1.5rem;
-  }
-
-  .footer-source {
-    text-decoration: none;
-    border-bottom: 1px solid var(--line-strong);
-  }
-
-  .footer-source:hover {
-    color: var(--text);
-    border-bottom-color: var(--patina);
   }
 
   @keyframes breathe {

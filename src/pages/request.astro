@@ -1,0 +1,11 @@
+---
+import Request from '../components/Request.astro';
+import { useTranslations } from '../i18n/utils.ts';
+import Layout from '../layouts/Layout.astro';
+
+const t = useTranslations('en');
+---
+
+<Layout locale="en" title={t.request.meta.title} noIndex>
+  <Request locale="en" />
+</Layout>

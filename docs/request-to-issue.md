@@ -1,6 +1,6 @@
 # Draft: signed-in form where people contribute content about Flop
 
-Status: **draft, nothing implemented**. Written 2026-08-08, revised 2026-09-09.
+Status: **in progress**. Written 2026-08-08, revised 2026-09-13.
 
 ## What this actually is
 
@@ -12,12 +12,28 @@ site, in what shape, and drop the nasty ones.
 So the site is partly written by other people, and the vouching is the point: a claim about
 someone carries weight only when it is attached to a real person who made it.
 
+## The wall
+
+The public side is a page called **the wall**: `/wall/`, "The wall" / "Стена" / "Ściana" in the
+three locales. Accepted contributions are shown there, and it is the only way in for a
+contributor: a single button, **"Write on the wall"**, leads to `/request/`. The home page links
+to the wall from the contact section.
+
+The wall is a surface, not a slot. The decision below not to pre-define a shape for contributed
+content still stands: what an entry looks like on the wall is for the agents downstream to work
+out. Until the first one lands the wall is empty, and says so.
+
+Three locales, static, no SSR and no secrets on this side. `/request/` is a "coming soon" stub
+until the form exists, so the button never leads to a 404.
+
 ## Scope
 
 This side **ends when the issue exists**. Classification, deciding what goes on the site, writing
 the copy and dropping abuse all happen downstream and are out of scope here.
 
 ```
+/wall/
+   -> "Write on the wall"          the only way in, from the public wall
 /request/
    -> "Sign in with GitHub"        no anonymous path at all
    -> GET  /api/auth/login         redirect to GitHub with a state parameter
@@ -168,8 +184,10 @@ was wrong and the design has to change before anything is built on it.
 
 ## Suggested order of work
 
+0. Empty `/wall/` in three locales with the button, `/request/` as a "coming soon" stub, link
+   from the home page. Done 2026-09-13.
 1. Register and install the GitHub App, store the secrets, run the second-account test above.
-2. `/request/` page in three locales: signed-out and signed-in states, and the sentence about
+2. `/request/` replaces the stub: signed-out and signed-in states, and the sentence about
    publication.
 3. OAuth round trip: `/api/auth/login`, `/api/auth/callback`, `state` check, session cookie.
 4. `POST /api/request`: validation, the rate-limit query, template rendering with escaping,
@@ -183,3 +201,5 @@ Four steps, no LLM on this side, and nothing here depends on the downstream desi
   that agents classify rather than the submitter picking a category. Still undecided.
 - Removal: if a contributor asks for their entry to be taken down, what is the path?
 - Does a published contribution link back to its issue, so the provenance is checkable?
+- What does an entry look like on the wall: author, date, the text, a link to the issue? Left to
+  downstream on purpose, see "The wall".

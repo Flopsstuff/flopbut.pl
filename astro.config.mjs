@@ -64,6 +64,8 @@ export default defineConfig({
 
   integrations: [
     sitemap({
+      // The request stub is noindex until the form exists; keep it out of the sitemap too.
+      filter: (page) => !page.includes('/request/'),
       i18n: {
         defaultLocale: DEFAULT_LOCALE,
         locales: Object.fromEntries(LOCALES.map((locale) => [locale, locale])),

@@ -109,11 +109,35 @@ const en = {
     email: 'Email',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    wall: 'Wall',
   },
 
   footer: {
     built: 'This site is 100% AI generated.',
     source: 'Source on GitHub',
+  },
+
+  wall: {
+    meta: {
+      title: 'The wall - Flop Butylkin',
+      description:
+        'Notes about Flop Butylkin left by people who know him. Sign in with GitHub and write your own.',
+    },
+    eyebrow: 'The wall',
+    title: 'What people say about Flop',
+    body: 'Anyone who knows Flop can leave a note here: a recommendation, a thank you, a correction. Sign in with GitHub and write it in your own words. Whatever gets published appears with your name on it.',
+    empty: 'Nothing here yet. Be the first.',
+    cta: 'Write on the wall',
+  },
+
+  request: {
+    meta: {
+      title: 'Write on the wall - Flop Butylkin',
+    },
+    eyebrow: 'Coming soon',
+    title: 'The form is not here yet',
+    body: 'Sign-in with GitHub and the form are still being built. Come back a little later.',
+    back: 'Back to the wall',
   },
 };
 
@@ -228,11 +252,35 @@ const ru: Dictionary = {
     email: 'Почта',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    wall: 'Стена',
   },
 
   footer: {
     built: 'Этот сайт на 100% сгенерирован AI.',
     source: 'Исходники на GitHub',
+  },
+
+  wall: {
+    meta: {
+      title: 'Стена - Flop Butylkin',
+      description:
+        'Записи о Flop Butylkin от людей, которые его знают. Войдите через GitHub и напишите свою.',
+    },
+    eyebrow: 'Стена',
+    title: 'Что говорят о Флопе',
+    body: 'Любой, кто знает Флопа, может оставить здесь запись: рекомендацию, благодарность, поправку. Войдите через GitHub и напишите своими словами. Всё, что будет опубликовано, появится под вашим именем.',
+    empty: 'Пока пусто. Будьте первым.',
+    cta: 'Написать на стене',
+  },
+
+  request: {
+    meta: {
+      title: 'Написать на стене - Flop Butylkin',
+    },
+    eyebrow: 'Скоро',
+    title: 'Формы пока нет',
+    body: 'Вход через GitHub и форма ещё в работе. Загляните чуть позже.',
+    back: 'Назад на стену',
   },
 };
 
@@ -340,11 +388,35 @@ const pl: Dictionary = {
     email: 'E-mail',
     github: 'GitHub',
     linkedin: 'LinkedIn',
+    wall: 'Ściana',
   },
 
   footer: {
     built: 'Ta strona jest w 100% wygenerowana przez AI.',
     source: 'Kod na GitHubie',
+  },
+
+  wall: {
+    meta: {
+      title: 'Ściana - Flop Butylkin',
+      description:
+        'Wpisy o Flopie Butylkinie od ludzi, którzy go znają. Zaloguj się przez GitHub i napisz swój.',
+    },
+    eyebrow: 'Ściana',
+    title: 'Co mówią o Flopie',
+    body: 'Każdy, kto zna Flopa, może zostawić tu wpis: rekomendację, podziękowanie, sprostowanie. Zaloguj się przez GitHub i napisz własnymi słowami. To, co zostanie opublikowane, pojawi się pod Twoim nazwiskiem.',
+    empty: 'Na razie pusto. Bądź pierwszy.',
+    cta: 'Napisz na ścianie',
+  },
+
+  request: {
+    meta: {
+      title: 'Napisz na ścianie - Flop Butylkin',
+    },
+    eyebrow: 'Wkrótce',
+    title: 'Formularza jeszcze nie ma',
+    body: 'Logowanie przez GitHub i formularz są jeszcze w budowie. Zajrzyj trochę później.',
+    back: 'Wróć na ścianę',
   },
 };
 
