@@ -65,8 +65,10 @@ A screenshot never goes into the pull request's own diff. It would ship with the
 the repository's history for good, and images here are stored in Git LFS (see `.gitattributes`),
 so it would also cost LFS storage for something nobody needs after the merge.
 
-Pull requests #16, #17 and #18 embed their images from a `shots` branch, which predates
-`--attach`. It stays as it is so those still render; nothing new goes there.
+Pull requests #16, #17 and #18 embed their images from a `shots` branch, which predated
+`--attach`. That branch has been deleted from the remote, so those images no longer render and
+are not recoverable from it. The historical bodies are left as they are.
+`gh pr create/edit/comment --attach` is the only supported way to attach a screenshot.
 
 ## What a pull request body shows
 
