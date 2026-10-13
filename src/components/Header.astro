@@ -1,5 +1,5 @@
 ---
-import type { Locale } from '../config.ts';
+import { LINKS, type Locale } from '../config.ts';
 import { alternateLinks, localizedPath, useTranslations } from '../i18n/utils.ts';
 
 interface Props {
@@ -26,6 +26,7 @@ const onWall = Astro.url.pathname === wallPath;
       >
         {t.nav.wall}
       </a>
+      <a class="nav-link" href={LINKS.projects}>{t.nav.projects}</a>
     </nav>
 
     <div class="controls">
@@ -167,7 +168,7 @@ const onWall = Astro.url.pathname === wallPath;
     color: var(--brass);
   }
 
-  /* Phones: the wall link, three languages and the toggle must all fit beside the wordmark. */
+  /* Phones: both nav links, three languages and the toggle must all fit beside the wordmark. */
   @media (max-width: 26rem) {
     .header-inner {
       flex-wrap: wrap;

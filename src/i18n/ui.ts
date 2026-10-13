@@ -17,6 +17,7 @@ const en = {
     theme: 'Switch theme',
     language: 'Language',
     wall: 'wall',
+    projects: 'projects',
   },
 
   hero: {
@@ -220,6 +221,7 @@ const ru: Dictionary = {
     theme: 'Сменить тему',
     language: 'Язык',
     wall: 'стена',
+    projects: 'проекты',
   },
 
   hero: {
@@ -410,6 +412,7 @@ const pl: Dictionary = {
     theme: 'Zmień motyw',
     language: 'Język',
     wall: 'ściana',
+    projects: 'projekty',
   },
 
   hero: {
