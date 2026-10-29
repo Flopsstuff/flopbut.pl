@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /api/
+Disallow: /request/
+Disallow: /ru/request/
+Disallow: /pl/request/
+
+Sitemap: https://flopbut.pl/sitemap-index.xml

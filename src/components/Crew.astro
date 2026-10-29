@@ -42,6 +42,7 @@ const t = useTranslations(locale);
     </ul>
 
     <p class="punchline">{t.crew.punchline}</p>
+    <p class="prose human-part">{t.crew.humanPart}</p>
   </div>
 </section>
 
@@ -145,6 +146,10 @@ const t = useTranslations(locale);
     line-height: 1.25;
     letter-spacing: -0.015em;
     text-wrap: balance;
+  }
+
+  .human-part {
+    margin-top: 1.25rem;
   }
 
   @keyframes heartbeat {

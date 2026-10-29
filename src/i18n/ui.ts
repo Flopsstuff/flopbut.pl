@@ -50,6 +50,9 @@ const en = {
     engineLabel: 'Runs on',
     human: 'Human',
     punchline: 'They are good at heading somewhere. Knowing why we are going is still my job.',
+    /* Follows the punchline: what stays with the human, in plain prose. */
+    humanPart:
+      "A person still does much of the work by hand. Agents and robots will take over more and more of it. But there are things they will never take over: catching an idea, getting inspired, working out what is really needed, and setting the goal for the agents/robots; judging the result and deciding what is right and what is not; giving the feedback that makes the next run better; and owning the outcome. When it goes out into the world, the responsibility is mine, not the model's.",
   },
 
   work: {
@@ -74,7 +77,7 @@ const en = {
       },
       hardware: {
         title: 'Hardware that talks back',
-        body: 'A Żabka bottle cap reverse-engineered into a motion controller. An IBM Wheelwriter taught new tricks. A coin pressed from real silver.',
+        body: 'Keryx, a speaker that hears its own wake word and lets the Hermes agent answer out loud. A Żabka bottle cap reverse-engineered into a motion controller. An IBM Wheelwriter taught new tricks. A coin pressed from real silver.',
       },
     },
   },
@@ -442,6 +445,8 @@ const ru: Dictionary = {
     engineLabel: 'Модель',
     human: 'Человек',
     punchline: 'Идти к цели они умеют. Понимать, зачем мы идём, - пока моя работа.',
+    humanPart:
+      'Многое в работе человек пока делает сам. Агенты и роботы будут заменять его всё больше и больше. Но есть то, в чём они не заменят его никогда: поймать идею, вдохновиться, понять, что же на самом деле нужно, и поставить цель агентам/роботам; оценить результат и решить, что здесь правильно, а что нет; дать обратную связь, после которой следующий заход будет лучше; и взять на себя ответственность за результат. Когда это уходит в мир, отвечаю я, а не модель.',
   },
 
   work: {
@@ -466,7 +471,7 @@ const ru: Dictionary = {
       },
       hardware: {
         title: 'Железо, которое отвечает',
-        body: 'Крышечка Żabka, отреверсенная в контроллер движения. Пишущая машинка IBM Wheelwriter, обученная новым трюкам. Монета, отчеканенная из настоящего серебра.',
+        body: 'Колонка Keryx, которая сама слышит своё wake word и даёт агенту Hermes ответить вслух. Крышечка Żabka, отреверсенная в контроллер движения. Пишущая машинка IBM Wheelwriter, обученная новым трюкам. Монета, отчеканенная из настоящего серебра.',
       },
     },
   },
@@ -817,6 +822,8 @@ const pl: Dictionary = {
     engineLabel: 'Model',
     human: 'Człowiek',
     punchline: 'Iść do celu potrafią. Rozumieć po co idziemy - to wciąż moja robota.',
+    humanPart:
+      'Wiele pracy człowiek wciąż wykonuje sam. Agenci i roboty będą go zastępować coraz bardziej. Ale jest coś, w czym nie zastąpią go nigdy: złapać pomysł, zainspirować się, zrozumieć, czego tak naprawdę trzeba, i wyznaczyć cel agentom/robotom; ocenić wynik i rozstrzygnąć, co jest dobre, a co nie; dać feedback, po którym następne podejście wyjdzie lepiej; i wziąć odpowiedzialność za rezultat. Kiedy to wychodzi w świat, odpowiadam ja, nie model.',
   },
 
   work: {
@@ -841,7 +848,7 @@ const pl: Dictionary = {
       },
       hardware: {
         title: 'Sprzęt, który odpowiada',
-        body: 'Kapsel Żabka Triki zamieniony w kontroler ruchu. Maszyna do pisania IBM Wheelwriter nauczona nowych sztuczek. Moneta wybita z prawdziwego srebra.',
+        body: 'Głośnik Keryx, który sam słyszy swoje słowo wybudzające i pozwala agentowi Hermes odpowiadać na głos. Kapsel Żabka Triki zamieniony w kontroler ruchu. Maszyna do pisania IBM Wheelwriter nauczona nowych sztuczek. Moneta wybita z prawdziwego srebra.',
       },
     },
   },
