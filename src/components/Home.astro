@@ -4,6 +4,7 @@ import portrait from '../assets/flop.jpg';
 import { LINKS, type Locale } from '../config.ts';
 import { STACK_GROUPS, stack } from '../data/stack.ts';
 import { localizedPath, useTranslations } from '../i18n/utils.ts';
+import Approach from './Approach.astro';
 import Crew from './Crew.astro';
 import Footer from './Footer.astro';
 import Header from './Header.astro';
@@ -127,6 +128,10 @@ const contacts = [
       </dl>
     </div>
   </section>
+
+  <hr class="rule" />
+
+  <Approach locale={locale} />
 
   <hr class="rule" />
 

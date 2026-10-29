@@ -1,0 +1,89 @@
+---
+import type { Locale } from '../config.ts';
+import { useTranslations } from '../i18n/utils.ts';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const items = Object.values(t.approach.items);
+---
+
+<section class="section" aria-labelledby="approach-title">
+  <div class="page">
+    <div class="section-head">
+      <p class="label">{t.approach.eyebrow}</p>
+      <h2 class="section-title" id="approach-title">{t.approach.title}</h2>
+    </div>
+
+    <ol class="principles">
+      {
+        items.map((item, index) => (
+          <li class="principle">
+            <span class="label principle-index" aria-hidden="true">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <h3 class="principle-title">{item.title}</h3>
+            <p class="principle-body">{item.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    {/* The bridge to the crew right below: the same way of working, a different team. */}
+    <p class="coda">{t.approach.coda}</p>
+  </div>
+</section>
+
+<style>
+  /* Same hairline grid as the work tiles: the 1px gaps show the line colour through. */
+  .principles {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1px;
+    background-color: var(--line);
+    border-block: 1px solid var(--line);
+  }
+
+  @media (min-width: 56rem) {
+    .principles {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .principle {
+    background-color: var(--ink);
+    padding: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem) clamp(1.25rem, 1rem + 1vw, 2rem);
+  }
+
+  .principle-index {
+    display: block;
+    color: var(--patina);
+    margin-bottom: 1rem;
+  }
+
+  .principle-title {
+    font-size: var(--step-2);
+    margin-bottom: 0.75rem;
+  }
+
+  .principle-body {
+    color: var(--muted);
+    font-size: var(--step-0);
+  }
+
+  .coda {
+    max-width: 42ch;
+    margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+    font-family: var(--font-display), var(--font-fallback-sans);
+    font-size: var(--step-2);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+</style>

@@ -43,6 +43,27 @@ const en = {
     },
   },
 
+  /* How he works with people, which is also how he works with agents. Leads into the crew. */
+  approach: {
+    eyebrow: 'Approach',
+    title: 'Explain first, then let go',
+    items: {
+      goal: {
+        title: 'The goal, not the method',
+        body: 'A new person gets a detailed brief and close checks. As the results match what I expected, the checks thin out and the freedom grows. In the end I set the goal and let them choose the solution, and when something has to be redone, I explain why.',
+      },
+      handsOn: {
+        title: 'Hands in the system',
+        body: 'Even as a lead or a head I stay inside the code. I take what nobody else on the team can do, and leave what others can handle to them. I cannot trust a trade-off I do not understand myself.',
+      },
+      automate: {
+        title: 'Automate whatever repeats',
+        body: 'Builds, releases, localisation, integrations, documentation, alerts, reports, invoices, payments, publishing. If something has been done by hand three times, next time a script, a pipeline or an agent does it. What I leave behind is work nobody has to do by hand any more.',
+      },
+    },
+    coda: 'With agents it is almost exactly the same. The one doing the work changed, the approach did not.',
+  },
+
   crew: {
     eyebrow: 'The shift',
     title: 'Who actually does the work',
@@ -438,6 +459,26 @@ const ru: Dictionary = {
     },
   },
 
+  approach: {
+    eyebrow: 'Подход',
+    title: 'Сначала объяснить, потом отпустить',
+    items: {
+      goal: {
+        title: 'Цель, а не способ',
+        body: 'Новому человеку объясняю задачу подробно и проверяю плотно. Когда результат совпадает с ожиданием, контроля становится меньше, свободы больше. В итоге ставлю цель и даю самому выбрать решение, а если что-то надо переделать, объясняю почему.',
+      },
+      handsOn: {
+        title: 'Руки в системе',
+        body: 'Даже на позиции лида или хэда остаюсь внутри кода. Беру то, что в команде больше никто не сделает, а то, с чем справятся другие, оставляю им. Доверять компромиссу, которого сам не понимаю, я не умею.',
+      },
+      automate: {
+        title: 'Автоматизировать всё, что повторяется',
+        body: 'Сборки, релизы, локализации, интеграции, документации, алерты, репорты, инвойсы, оплаты, публикации. Если что-то сделано руками трижды, то в следующий раз это делает скрипт, пайплайн или агент. Я оставляю после себя работу, которую больше не надо делать руками.',
+      },
+    },
+    coda: 'С агентами почти всё точно так же. Поменялся исполнитель, а не подход.',
+  },
+
   crew: {
     eyebrow: 'Смена',
     title: 'Кто на самом деле делает работу',
@@ -813,6 +854,26 @@ const pl: Dictionary = {
       users: { value: '100M+', label: 'użytkowników' },
       tokens: { value: '2B+', label: 'tokenów / tydzień' },
     },
+  },
+
+  approach: {
+    eyebrow: 'Podejście',
+    title: 'Najpierw wyjaśnić, potem odpuścić',
+    items: {
+      goal: {
+        title: 'Cel, nie sposób',
+        body: 'Nowej osobie wyjaśniam zadanie szczegółowo i ściśle sprawdzam wynik. Gdy rezultaty zgadzają się z oczekiwaniami, kontroli jest mniej, a swobody więcej. W końcu wyznaczam cel i pozwalam samemu wybrać rozwiązanie, a jeśli coś trzeba poprawić, tłumaczę dlaczego.',
+      },
+      handsOn: {
+        title: 'Ręce w systemie',
+        body: 'Nawet jako lider czy head zostaję w kodzie. Biorę to, czego w zespole nikt inny nie zrobi, a to, z czym poradzą sobie inni, zostawiam im. Nie umiem ufać kompromisowi, którego sam nie rozumiem.',
+      },
+      automate: {
+        title: 'Automatyzować wszystko, co się powtarza',
+        body: 'Buildy, wydania, lokalizacje, integracje, dokumentacja, alerty, raporty, faktury, płatności, publikacje. Jeśli coś zrobiono ręcznie trzy razy, następnym razem robi to skrypt, pipeline albo agent. Zostawiam po sobie pracę, której nikt już nie musi robić ręcznie.',
+      },
+    },
+    coda: 'Z agentami jest prawie dokładnie tak samo. Zmienił się wykonawca, nie podejście.',
   },
 
   crew: {
