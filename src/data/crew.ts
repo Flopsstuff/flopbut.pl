@@ -19,12 +19,17 @@ export const crew: CrewMember[] = [
   {
     name: 'Prospero',
     role: { en: 'Chief executive', ru: 'Директор', pl: 'Dyrektor' },
-    engine: 'Claude Opus',
+    engine: 'Claude Fable',
   },
   {
     name: 'Daedalus',
     role: { en: 'Chief technology', ru: 'Технический директор', pl: 'Dyrektor techniczny' },
     engine: 'Claude Opus',
+  },
+  {
+    name: 'Hermes',
+    role: { en: 'Management', ru: 'Менеджер', pl: 'Menedżer' },
+    engine: 'GPT-5.6 Sol',
   },
   {
     name: 'Wayland',
@@ -34,7 +39,7 @@ export const crew: CrewMember[] = [
   {
     name: 'Aldric',
     role: { en: 'Engineering', ru: 'Инженер', pl: 'Inżynier' },
-    engine: 'GPT-5.5',
+    engine: 'GPT-5.6 Sol',
   },
   {
     name: 'Lyra',
