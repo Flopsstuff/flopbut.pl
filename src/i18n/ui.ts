@@ -39,7 +39,7 @@ const en = {
       years: { value: '20', label: 'years shipping software' },
       team: { value: '20+', label: 'engineers led' },
       users: { value: '100M+', label: 'users reached' },
-      tokens: { value: '2B', label: 'tokens / week' },
+      tokens: { value: '2B+', label: 'tokens / week' },
     },
   },
 
@@ -431,7 +431,7 @@ const ru: Dictionary = {
       years: { value: '20', label: 'лет в разработке' },
       team: { value: '20+', label: 'инженеров в команде' },
       users: { value: '100M+', label: 'пользователей' },
-      tokens: { value: '2B', label: 'токенов / неделя' },
+      tokens: { value: '2B+', label: 'токенов / неделя' },
     },
   },
 
@@ -806,7 +806,7 @@ const pl: Dictionary = {
       years: { value: '20', label: 'lat w branży' },
       team: { value: '20+', label: 'inżynierów w zespole' },
       users: { value: '100M+', label: 'użytkowników' },
-      tokens: { value: '2B', label: 'tokenów / tydzień' },
+      tokens: { value: '2B+', label: 'tokenów / tydzień' },
     },
   },
 
