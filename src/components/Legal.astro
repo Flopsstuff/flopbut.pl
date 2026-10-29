@@ -1,0 +1,157 @@
+---
+import type { Locale } from '../config.ts';
+import { useTranslations } from '../i18n/utils.ts';
+import Footer from './Footer.astro';
+import Header from './Header.astro';
+import RichText from './RichText.astro';
+
+/** The legal pages share one layout; the text lives in the dictionary under the same key. */
+export type LegalDoc = 'privacy' | 'terms';
+
+/** Bump the date of a document whenever its text changes in a way a reader should know about. */
+const UPDATED: Record<LegalDoc, string> = {
+  privacy: '2026-10-29',
+  terms: '2026-10-29',
+};
+
+interface Props {
+  locale: Locale;
+  doc: LegalDoc;
+}
+
+interface Section {
+  title: string;
+  body: readonly string[];
+  items?: readonly string[];
+  after?: readonly string[];
+}
+
+const { locale, doc } = Astro.props;
+const t = useTranslations(locale)[doc];
+const sections = Object.entries(t.sections as Record<string, Section>);
+const updated = UPDATED[doc];
+const updatedLabel = new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeZone: 'UTC' }).format(
+  new Date(updated),
+);
+---
+
+<Header locale={locale} />
+
+<main id="main" class="legal">
+  <div class="page">
+    <p class="label">{t.eyebrow}</p>
+    <h1 class="title">{t.title}</h1>
+    <p class="label updated">
+      {t.updated}: <time datetime={updated}>{updatedLabel}</time>
+    </p>
+    <p class="lead-in"><RichText text={t.intro} /></p>
+    <p class="language"><RichText text={t.language} /></p>
+
+    {
+      sections.map(([id, section]) => (
+        <section class="block" id={id} aria-labelledby={`${id}-title`}>
+          <h2 class="block-title" id={`${id}-title`}>
+            {section.title}
+          </h2>
+          {section.body.map((text) => (
+            <p>
+              <RichText text={text} />
+            </p>
+          ))}
+          {section.items && (
+            <ul>
+              {section.items.map((text) => (
+                <li>
+                  <RichText text={text} />
+                </li>
+              ))}
+            </ul>
+          )}
+          {section.after?.map((text) => (
+            <p>
+              <RichText text={text} />
+            </p>
+          ))}
+        </section>
+      ))
+    }
+  </div>
+</main>
+
+<Footer locale={locale} />
+
+<style>
+  .legal {
+    padding-block: clamp(4rem, 3rem + 6vw, 9rem);
+  }
+
+  .title {
+    font-size: var(--step-5);
+    margin-block: 1.5rem 1rem;
+  }
+
+  .updated {
+    letter-spacing: 0.08em;
+  }
+
+  .lead-in {
+    max-width: var(--measure);
+    margin-top: 2rem;
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  /* Which version prevails: English, the others are translations. */
+  .language {
+    max-width: var(--measure);
+    margin-top: 1rem;
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+
+  .language :global(a) {
+    color: var(--text);
+  }
+
+  .block {
+    max-width: var(--measure);
+    margin-top: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+    padding-top: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+  }
+
+  .block-title {
+    font-size: var(--step-2);
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+
+  .block p + p,
+  .block ul + p {
+    margin-top: 1rem;
+  }
+
+  .block ul {
+    margin: 1rem 0 0;
+    padding-left: 1.25rem;
+    list-style: square;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .block li::marker {
+    color: var(--patina);
+  }
+
+  /* Links and code come from RichText, a child component, so scoped selectors need :global. */
+  .block :global(a) {
+    color: var(--text);
+  }
+
+  .legal :global(code) {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 0.88em;
+    color: var(--text);
+  }
+</style>

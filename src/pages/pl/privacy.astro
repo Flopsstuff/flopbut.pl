@@ -1,0 +1,11 @@
+---
+import Legal from '../../components/Legal.astro';
+import { useTranslations } from '../../i18n/utils.ts';
+import Layout from '../../layouts/Layout.astro';
+
+const t = useTranslations('pl');
+---
+
+<Layout locale="pl" title={t.privacy.meta.title} description={t.privacy.meta.description}>
+  <Legal locale="pl" doc="privacy" />
+</Layout>
