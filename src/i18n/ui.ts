@@ -39,7 +39,7 @@ const en = {
       years: { value: '20', label: 'years shipping software' },
       team: { value: '20+', label: 'engineers led' },
       users: { value: '100M+', label: 'users reached' },
-      crashFree: { value: '99.99%', label: 'crash-free sessions' },
+      tokens: { value: '2B', label: 'tokens / week' },
     },
   },
 
@@ -431,7 +431,7 @@ const ru: Dictionary = {
       years: { value: '20', label: 'лет в разработке' },
       team: { value: '20+', label: 'инженеров в команде' },
       users: { value: '100M+', label: 'пользователей' },
-      crashFree: { value: '99.99%', label: 'сессий без падений' },
+      tokens: { value: '2B', label: 'токенов / неделя' },
     },
   },
 
@@ -806,7 +806,7 @@ const pl: Dictionary = {
       years: { value: '20', label: 'lat w branży' },
       team: { value: '20+', label: 'inżynierów w zespole' },
       users: { value: '100M+', label: 'użytkowników' },
-      crashFree: { value: '99.99%', label: 'sesji bez awarii' },
+      tokens: { value: '2B', label: 'tokenów / tydzień' },
     },
   },
 
