@@ -1,0 +1,21 @@
+---
+import { parseInline } from '../lib/inline.ts';
+
+interface Props {
+  text: string;
+}
+
+const parts = parseInline(Astro.props.text);
+---
+
+{
+  parts.map((part) =>
+    part.kind === 'link' ? (
+      <a href={part.href}>{part.text}</a>
+    ) : part.kind === 'code' ? (
+      <code>{part.text}</code>
+    ) : (
+      part.text
+    ),
+  )
+}
