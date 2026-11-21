@@ -2,7 +2,7 @@
 
 Personal site of Flop Butylkin, live at **[flopbut.pl](https://flopbut.pl)**: who he is, what he
 works on, the tools he uses and the crew of AI agents he works with, in English, Russian and
-Polish.
+Polish. The crew has its own page at **[agents.flopbut.pl](https://agents.flopbut.pl)**.
 
 The site is written and maintained by AI agents, and part of it is written by its visitors:
 anyone with a GitHub account can leave a note or a request on

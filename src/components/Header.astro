@@ -1,16 +1,24 @@
 ---
-import { LINKS, type Locale } from '../config.ts';
+import { LINKS, type Locale, SITE_URL } from '../config.ts';
 import { alternateLinks, localizedPath, useTranslations } from '../i18n/utils.ts';
 
 interface Props {
   locale: Locale;
   /** Error pages: switch to each locale's home, since the current path has no translations. */
   toHome?: boolean;
+  /**
+   * Set on the crew page, which is served from agents.flopbut.pl: the language switcher
+   * goes to these addresses, and the site links become absolute so they leave the subdomain.
+   */
+  addresses?: Record<Locale, string>;
 }
 
-const { locale, toHome = false } = Astro.props;
+const { locale, toHome = false, addresses } = Astro.props;
 const t = useTranslations(locale);
-const alternates = alternateLinks(locale, toHome ? new URL('/', Astro.url) : Astro.url);
+const site = addresses ? SITE_URL : '';
+const alternates = alternateLinks(locale, toHome ? new URL('/', Astro.url) : Astro.url).map(
+  (alt) => ({ ...alt, href: addresses?.[alt.locale] ?? alt.path }),
+);
 const wallPath = localizedPath(locale, '/wall/');
 const onWall = Astro.url.pathname === wallPath;
 ---
@@ -18,10 +26,10 @@ const onWall = Astro.url.pathname === wallPath;
 <header class="header">
   <div class="page header-inner">
     <nav class="brand" aria-label="flopbut.pl">
-      <a class="wordmark" href={locale === 'en' ? '/' : `/${locale}/`}>flopbut.pl</a>
+      <a class="wordmark" href={`${site}${localizedPath(locale, '/')}`}>flopbut.pl</a>
       <a
         class:list={['nav-link', { 'nav-current': onWall }]}
-        href={wallPath}
+        href={`${site}${wallPath}`}
         aria-current={onWall ? 'page' : undefined}
       >
         {t.nav.wall}
@@ -32,9 +40,9 @@ const onWall = Astro.url.pathname === wallPath;
     <div class="controls">
       <nav class="langs" aria-label={t.nav.language}>
         {
-          alternates.map(({ locale: alt, path, isCurrent, label }) => (
+          alternates.map(({ locale: alt, href, isCurrent, label }) => (
             <a
-              href={path}
+              href={href}
               hreflang={alt}
               lang={alt}
               title={label}

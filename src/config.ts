@@ -10,6 +10,12 @@ export type Locale = (typeof LOCALES)[number];
 /** The project catalogue. */
 export const PROJECTS_URL = 'https://stuff.flopbut.pl';
 
+/**
+ * The crew page. Built under /agents/ and served at the root of this host by src/worker.ts,
+ * so this is its only public address.
+ */
+export const AGENTS_URL = 'https://agents.flopbut.pl';
+
 /** Where the wall's requests land as issues (docs/request-to-issue.md). */
 export const REPO = { owner: 'Flopsstuff', name: 'flopbut.pl' } as const;
 

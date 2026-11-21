@@ -1,7 +1,9 @@
 ---
+import { Image } from 'astro:assets';
 import type { Locale } from '../config.ts';
 import { crew } from '../data/crew.ts';
-import { useTranslations } from '../i18n/utils.ts';
+import { portraitOf } from '../data/portraits.ts';
+import { agentsAddresses, useTranslations } from '../i18n/utils.ts';
 
 interface Props {
   locale: Locale;
@@ -9,6 +11,8 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = useTranslations(locale);
+const agents = crew.filter((member) => !member.human);
+const href = agentsAddresses()[locale];
 ---
 
 <section class="section" aria-labelledby="crew-title">
@@ -19,27 +23,28 @@ const t = useTranslations(locale);
       <p class="prose">{t.crew.body}</p>
     </div>
 
-    <ul class="roster">
-      {
-        crew.map((member, index) => (
-          <li
-            class:list={['row', { 'row-human': member.human }]}
-            style={`--i: ${index}`}
-          >
-            <span class="pulse" aria-hidden="true" />
-            <span class="name">{member.name}</span>
-            <span class="role">{member.human ? t.crew.human : member.role[locale]}</span>
-            {member.engine && (
-              <span class="engine">
-                <span class="sr-only">{t.crew.engineLabel}: </span>
-                {member.engine}
-              </span>
-            )}
-            {member.human && <span class="human-note">{member.role[locale]}</span>}
-          </li>
-        ))
-      }
-    </ul>
+    {/* The roster moved to its own page on agents.flopbut.pl; here the fleet is a row of faces. */}
+    <a class="crew-link" href={href}>
+      <span class="faces" aria-hidden="true">
+        {
+          agents.map((member, index) => (
+            <Image
+              class="face"
+              src={portraitOf(member.name)}
+              alt=""
+              width={96}
+              height={96}
+              style={`--i: ${index}`}
+            />
+          ))
+        }
+      </span>
+      <span class="crew-cta">
+        <span class="crew-cta-text">{t.crew.cta}</span>
+        <span class="crew-arrow" aria-hidden="true">→</span>
+      </span>
+      <span class="label crew-host">agents.flopbut.pl</span>
+    </a>
 
     <p class="punchline">{t.crew.punchline}</p>
     <p class="prose human-part">{t.crew.humanPart}</p>
@@ -47,95 +52,93 @@ const t = useTranslations(locale);
 </section>
 
 <style>
-  .roster {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    border-top: 1px solid var(--line);
-  }
-
-  /*
-    The model column is fixed width and last, so it ends on the same edge in every row
-    and the roles right-align against it - the names absorb the slack instead.
-  */
-  .row {
+  .crew-link {
     display: grid;
-    grid-template-columns: 1.5rem 1fr auto 9rem;
-    grid-template-areas: 'pulse name role engine';
-    align-items: baseline;
-    gap: 0 1rem;
-    padding-block: 0.85rem;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .pulse {
-    grid-area: pulse;
-    width: 0.4rem;
-    height: 0.4rem;
-    border-radius: 50%;
-    background-color: var(--line-strong);
-    justify-self: start;
-    align-self: center;
-    /*
-      One heartbeat travels down the roster and then the list rests - the same
-      wake-up signal the real agents run on, not decoration for its own sake.
-    */
-    animation: heartbeat 7s ease-in-out infinite;
-    animation-delay: calc(var(--i) * 0.32s);
-  }
-
-  .name {
-    grid-area: name;
-    font-family: var(--font-display), var(--font-fallback-sans);
-    font-size: var(--step-1);
-    letter-spacing: -0.015em;
-  }
-
-  .role {
-    grid-area: role;
-    font-family: var(--font-mono), ui-monospace, monospace;
-    font-size: var(--step--1);
-    color: var(--muted);
-    text-align: right;
-  }
-
-  .engine {
-    grid-area: engine;
-    font-family: var(--font-mono), ui-monospace, monospace;
-    font-size: var(--step--1);
-    color: var(--patina);
-    text-align: right;
-  }
-
-  /* The human closes the list: brass instead of patina, and his role spelled out below. */
-  .row-human {
-    margin-top: 1.5rem;
-    border-top: 1px solid var(--brass);
-    border-bottom-color: var(--brass);
+    grid-template-columns: 1fr auto;
     grid-template-areas:
-      'pulse name role engine'
-      '.     note note note';
+      'faces faces'
+      'cta   host';
+    align-items: baseline;
+    gap: 1.25rem 1.5rem;
+    padding: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
+    border: 1px solid var(--line-strong);
+    text-decoration: none;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease;
   }
 
-  .row-human .pulse {
-    background-color: var(--brass);
-    animation: none;
+  .crew-link:hover {
+    border-color: var(--patina);
+    background-color: var(--surface);
   }
 
-  .row-human .name {
-    color: var(--brass);
+  /* Overlapping like a stack of badges; each face is ringed in the page colour so they separate. */
+  .faces {
+    grid-area: faces;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+    padding-left: 0.6rem;
   }
 
-  .row-human .role {
-    color: var(--brass);
+  .face {
+    display: block;
+    width: clamp(2.5rem, 2rem + 2vw, 3rem);
+    height: clamp(2.5rem, 2rem + 2vw, 3rem);
+    margin-left: -0.6rem;
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    object-fit: cover;
+    transition:
+      transform 0.2s ease,
+      border-color 0.2s ease;
+    transition-delay: calc(var(--i) * 18ms);
   }
 
-  .human-note {
-    grid-area: note;
-    font-family: var(--font-mono), ui-monospace, monospace;
-    font-size: var(--step--1);
-    color: var(--muted);
-    padding-top: 0.35rem;
+  .crew-link:hover .face {
+    border-color: var(--surface);
+    transform: translateY(-3px);
+  }
+
+  .crew-cta {
+    grid-area: cta;
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .crew-cta-text {
+    font-family: var(--font-display), var(--font-fallback-sans);
+    font-size: var(--step-3);
+    letter-spacing: -0.02em;
+  }
+
+  .crew-arrow {
+    font-size: var(--step-3);
+    color: var(--patina);
+    transition: transform 0.2s ease;
+  }
+
+  .crew-link:hover .crew-arrow {
+    transform: translateX(0.35rem);
+  }
+
+  .crew-host {
+    grid-area: host;
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+
+  @media (max-width: 34rem) {
+    .crew-link {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'faces'
+        'cta'
+        'host';
+      gap: 1rem;
+    }
   }
 
   .punchline {
@@ -150,44 +153,5 @@ const t = useTranslations(locale);
 
   .human-part {
     margin-top: 1.25rem;
-  }
-
-  @keyframes heartbeat {
-    0%,
-    82%,
-    100% {
-      background-color: var(--line-strong);
-      box-shadow: none;
-    }
-    86% {
-      background-color: var(--patina);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--patina) 22%, transparent);
-    }
-    94% {
-      background-color: var(--line-strong);
-      box-shadow: none;
-    }
-  }
-
-  /* Too narrow for four columns: the name takes its own line, role and model share the next. */
-  @media (max-width: 40rem) {
-    .row {
-      grid-template-columns: 1.25rem 1fr auto;
-      grid-template-areas:
-        'pulse name name'
-        '.     role engine';
-      gap: 0.15rem 0.75rem;
-    }
-
-    .role {
-      text-align: left;
-    }
-
-    .row-human {
-      grid-template-areas:
-        'pulse name name'
-        '.     role role'
-        '.     note note';
-    }
   }
 </style>

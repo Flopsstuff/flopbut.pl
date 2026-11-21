@@ -1,0 +1,341 @@
+---
+import { Image } from 'astro:assets';
+import flop from '../assets/flop.jpg';
+import type { Locale } from '../config.ts';
+import { crew } from '../data/crew.ts';
+import { portraitOf } from '../data/portraits.ts';
+import { agentsAddresses, useTranslations } from '../i18n/utils.ts';
+import Footer from './Footer.astro';
+import Header from './Header.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const agents = crew.filter((member) => !member.human);
+const human = crew.find((member) => member.human);
+---
+
+<Header locale={locale} addresses={agentsAddresses()} />
+
+<main id="main">
+  <section class="intro">
+    <div class="page">
+      <p class="label intro-meta">
+        <span class="live">{t.crew.eyebrow}</span>
+        <span class="dot" aria-hidden="true">·</span>
+        <span>agents.flopbut.pl</span>
+      </p>
+      <h1 class="intro-title" id="intro-title">{t.crew.title}</h1>
+      <p class="prose intro-body">{t.crew.body}</p>
+    </div>
+  </section>
+
+  <section class="crew-section">
+    <div class="page">
+      <ul class="crew">
+        {
+          agents.map((member, index) => (
+            <li class="card" style={`--i: ${index}`}>
+              {/* Rendered at 2× the largest display size so it stays sharp on retina. */}
+              <Image
+                class="face"
+                src={portraitOf(member.name)}
+                alt=""
+                width={480}
+                height={480}
+                loading={index < 4 ? 'eager' : 'lazy'}
+              />
+              <div class="card-body">
+                <h2 class="name">
+                  <span class="pulse" aria-hidden="true" />
+                  {member.name}
+                </h2>
+                <p class="role">{member.role[locale]}</p>
+                {member.engine && (
+                  <p class="engine">
+                    <span class="sr-only">{t.crew.engineLabel}: </span>
+                    {member.engine}
+                  </p>
+                )}
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="label portraits-note">{t.agents.portraits}</p>
+    </div>
+  </section>
+
+  {
+    human && (
+      <section class="human-section">
+        <div class="page">
+          <div class="human">
+            <Image class="human-face" src={flop} alt={human.name} width={224} height={224} />
+            <div>
+              <p class="label human-label">{t.crew.human}</p>
+              <p class="human-name">{human.name}</p>
+              <p class="human-role">{human.role[locale]}</p>
+            </div>
+          </div>
+
+          <p class="punchline">{t.crew.punchline}</p>
+          <p class="prose human-part">{t.crew.humanPart}</p>
+        </div>
+      </section>
+    )
+  }
+</main>
+
+<Footer locale={locale} external />
+
+<style>
+  .intro {
+    padding-block: clamp(3rem, 2rem + 5vw, 6.5rem) clamp(2rem, 1.5rem + 3vw, 3.5rem);
+  }
+
+  .intro-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  }
+
+  .dot {
+    color: var(--line-strong);
+  }
+
+  .live {
+    color: var(--patina);
+  }
+
+  .live::before {
+    content: '';
+    display: inline-block;
+    width: 0.35rem;
+    height: 0.35rem;
+    margin-right: 0.45rem;
+    vertical-align: 0.08em;
+    border-radius: 50%;
+    background-color: var(--patina);
+    animation: breathe 3.5s ease-in-out infinite;
+  }
+
+  .intro-title {
+    max-width: 18ch;
+    font-size: var(--step-5);
+    font-weight: 700;
+    letter-spacing: -0.028em;
+  }
+
+  .intro-body {
+    margin-top: 1.5rem;
+  }
+
+  /* ---- the roster as faces ---- */
+
+  .crew-section {
+    padding-bottom: clamp(3rem, 2rem + 4vw, 5rem);
+  }
+
+  /*
+    Hairline grid like the work section on the home page: the gap shows the line colour, so
+    every card gets the same machined edge without doubled borders.
+  */
+  .crew {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background-color: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  @media (min-width: 44rem) {
+    .crew {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .crew {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--ink);
+    transition: background-color 0.2s ease;
+  }
+
+  .card:hover {
+    background-color: var(--surface);
+  }
+
+  .face {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    /* The renders are lit for a dark room; in the light theme they keep their own background. */
+    filter: saturate(0.92);
+    transition: filter 0.25s ease;
+  }
+
+  .card:hover .face {
+    filter: saturate(1.08);
+  }
+
+  .card-body {
+    display: grid;
+    gap: 0.2rem;
+    padding: 0.9rem clamp(0.85rem, 0.6rem + 0.8vw, 1.25rem) 1.1rem;
+  }
+
+  .name {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: var(--step-1);
+    letter-spacing: -0.015em;
+  }
+
+  .role,
+  .engine {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: var(--step--1);
+    line-height: 1.45;
+  }
+
+  .role {
+    color: var(--muted);
+  }
+
+  .engine {
+    color: var(--patina);
+  }
+
+  /*
+    The heartbeat from the old roster, now running across the grid: one wake-up travels card
+    to card and the fleet rests, the same signal the real agents run on.
+  */
+  .pulse {
+    flex-shrink: 0;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background-color: var(--line-strong);
+    animation: heartbeat 7s ease-in-out infinite;
+    animation-delay: calc(var(--i) * 0.32s);
+  }
+
+  .portraits-note {
+    max-width: 60ch;
+    margin-top: 1.25rem;
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+
+  /* ---- the human ---- */
+
+  .human-section {
+    padding-bottom: clamp(3.5rem, 2.5rem + 5vw, 7rem);
+  }
+
+  .human {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 0.7rem + 1.4vw, 1.75rem);
+    padding-top: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+    border-top: 1px solid var(--brass);
+  }
+
+  .human-face {
+    flex-shrink: 0;
+    display: block;
+    width: 76px;
+    height: 76px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    object-fit: cover;
+    filter: saturate(0.9);
+  }
+
+  @media (min-width: 40rem) {
+    .human-face {
+      width: 112px;
+      height: 112px;
+    }
+  }
+
+  .human-label {
+    color: var(--brass);
+  }
+
+  .human-name {
+    margin-top: 0.3rem;
+    font-family: var(--font-display), var(--font-fallback-sans);
+    font-size: var(--step-3);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--brass);
+  }
+
+  .human-role {
+    margin-top: 0.35rem;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+
+  .punchline {
+    max-width: 42ch;
+    margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+    font-family: var(--font-display), var(--font-fallback-sans);
+    font-size: var(--step-2);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  .human-part {
+    margin-top: 1.25rem;
+  }
+
+  @keyframes heartbeat {
+    0%,
+    82%,
+    100% {
+      background-color: var(--line-strong);
+      box-shadow: none;
+    }
+    86% {
+      background-color: var(--patina);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--patina) 22%, transparent);
+    }
+    94% {
+      background-color: var(--line-strong);
+      box-shadow: none;
+    }
+  }
+
+  @keyframes breathe {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+</style>

@@ -1,13 +1,16 @@
 ---
-import { LINKS, type Locale } from '../config.ts';
+import { LINKS, type Locale, SITE_URL } from '../config.ts';
 import { localizedPath, useTranslations } from '../i18n/utils.ts';
 
 interface Props {
   locale: Locale;
+  /** Absolute links back to the apex, for the crew page served from agents.flopbut.pl. */
+  external?: boolean;
 }
 
-const { locale } = Astro.props;
+const { locale, external = false } = Astro.props;
 const t = useTranslations(locale);
+const site = external ? SITE_URL : '';
 ---
 
 <footer class="footer">
@@ -15,8 +18,8 @@ const t = useTranslations(locale);
   <div class="page footer-inner">
     <p class="label">{t.footer.built}</p>
     <nav class="footer-links" aria-label="flopbut.pl">
-      <a class="label footer-link" href={localizedPath(locale, '/privacy/')}>{t.footer.privacy}</a>
-      <a class="label footer-link" href={localizedPath(locale, '/terms/')}>{t.footer.terms}</a>
+      <a class="label footer-link" href={`${site}${localizedPath(locale, '/privacy/')}`}>{t.footer.privacy}</a>
+      <a class="label footer-link" href={`${site}${localizedPath(locale, '/terms/')}`}>{t.footer.terms}</a>
       <a class="label footer-link" href={LINKS.repo}>{t.footer.source}</a>
     </nav>
   </div>

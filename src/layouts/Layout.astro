@@ -11,16 +11,34 @@ interface Props {
   description?: string;
   /** Error pages: skip indexing and skip hreflang, which would advertise routes that do not exist. */
   noIndex?: boolean;
+  /**
+   * Where each locale of this page lives, for pages whose public address is not
+   * SITE_URL + their build path: the crew page is built under /agents/ but served at the
+   * root of agents.flopbut.pl. Absolute URLs; the canonical is the current locale's entry.
+   */
+  addresses?: Record<Locale, string>;
+  /** Absolute URL of the share image; the portrait otherwise. */
+  image?: { url: string; alt: string };
 }
 
-const { locale, noIndex = false } = Astro.props;
+const { locale, noIndex = false, addresses } = Astro.props;
 const t = useTranslations(locale);
 const title = Astro.props.title ?? t.meta.title;
 const description = Astro.props.description ?? t.meta.description;
-const alternates = noIndex ? [] : alternateLinks(locale, Astro.url);
-const canonical = new URL(Astro.url.pathname, SITE_URL);
+const alternates = noIndex
+  ? []
+  : alternateLinks(locale, Astro.url).map((alt) => ({
+      locale: alt.locale,
+      href: addresses?.[alt.locale] ?? new URL(alt.path, SITE_URL).href,
+    }));
+const canonical = addresses?.[locale] ?? new URL(Astro.url.pathname, SITE_URL).href;
 /* x-default is the English variant of the current page, not the site root. */
-const xDefault = alternates.find((alt) => alt.locale === DEFAULT_LOCALE)?.path ?? '/';
+const xDefault =
+  alternates.find((alt) => alt.locale === DEFAULT_LOCALE)?.href ?? new URL('/', SITE_URL).href;
+const image = Astro.props.image ?? {
+  url: new URL('/og.jpg', SITE_URL).href,
+  alt: 'Flop Butylkin',
+};
 
 /*
   Preload only what paints first, in the alphabet this page is actually written in:
@@ -37,26 +55,22 @@ const fontSubset = locale === 'ru' ? 'cyrillic' : 'latin';
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical.href} />
+    <link rel="canonical" href={canonical} />
 
-    {
-      alternates.map(({ locale: alt, path }) => (
-        <link rel="alternate" hreflang={alt} href={new URL(path, SITE_URL).href} />
-      ))
-    }
-    {!noIndex && <link rel="alternate" hreflang="x-default" href={new URL(xDefault, SITE_URL).href} />}
+    {alternates.map(({ locale: alt, href }) => <link rel="alternate" hreflang={alt} href={href} />)}
+    {!noIndex && <link rel="alternate" hreflang="x-default" href={xDefault} />}
     {noIndex && <meta name="robots" content="noindex" />}
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical.href} />
+    <meta property="og:url" content={canonical} />
     <meta property="og:locale" content={locale} />
-    {/* Square portrait, so the small card is the right shape for it. */}
-    <meta property="og:image" content={new URL('/og.jpg', SITE_URL).href} />
+    {/* Square images only, so the small card is the right shape for every page. */}
+    <meta property="og:image" content={image.url} />
     <meta property="og:image:width" content="600" />
     <meta property="og:image:height" content="600" />
-    <meta property="og:image:alt" content="Flop Butylkin" />
+    <meta property="og:image:alt" content={image.alt} />
     <meta name="twitter:card" content="summary" />
 
     <meta name="theme-color" content="#0b1312" media="(prefers-color-scheme: dark)" />

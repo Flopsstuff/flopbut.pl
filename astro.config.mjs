@@ -66,7 +66,9 @@ export default defineConfig({
     sitemap({
       // The request form is per-person and noindex. It is SSR now, so the sitemap would skip
       // it anyway; the filter stays so that stays true even if the route is prerendered again.
-      filter: (page) => !page.includes('/request/'),
+      // The crew page is built under /agents/ but lives at agents.flopbut.pl, another host,
+      // which a sitemap for flopbut.pl cannot list; its canonical tag points there instead.
+      filter: (page) => !page.includes('/request/') && !page.includes('/agents/'),
       i18n: {
         defaultLocale: DEFAULT_LOCALE,
         locales: Object.fromEntries(LOCALES.map((locale) => [locale, locale])),

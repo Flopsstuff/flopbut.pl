@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, LOCALES, type Locale } from '../config.ts';
+import { AGENTS_URL, DEFAULT_LOCALE, LOCALES, type Locale } from '../config.ts';
 import { type Dictionary, dictionaries } from './ui.ts';
 
 export function isLocale(value: string | undefined): value is Locale {
@@ -23,6 +23,13 @@ export function localizedPath(locale: Locale, path = '/'): string {
   const clean = path.startsWith('/') ? path : `/${path}`;
   if (locale === DEFAULT_LOCALE) return clean;
   return clean === '/' ? `/${locale}/` : `/${locale}${clean}`;
+}
+
+/** Public address of the crew page in every locale: the locale roots of agents.flopbut.pl. */
+export function agentsAddresses(): Record<Locale, string> {
+  return Object.fromEntries(
+    LOCALES.map((locale) => [locale, `${AGENTS_URL}${localizedPath(locale, '/')}`]),
+  ) as Record<Locale, string>;
 }
 
 /** Every locale variant of the current page, for the language switcher and hreflang tags. */
