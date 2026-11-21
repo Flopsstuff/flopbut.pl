@@ -1,27 +1,61 @@
 ---
-import { LINKS, type Locale } from '../config.ts';
-import { alternateLinks, localizedPath, useTranslations } from '../i18n/utils.ts';
+import { LINKS, type Locale, SITE_URL } from '../config.ts';
+import { agentsAddresses, alternateLinks, localizedPath, useTranslations } from '../i18n/utils.ts';
 
 interface Props {
   locale: Locale;
   /** Error pages: switch to each locale's home, since the current path has no translations. */
   toHome?: boolean;
+  /**
+   * Set on the crew page, which is served from agents.flopbut.pl: the language switcher
+   * goes to these addresses, and the site links become absolute so they leave the subdomain.
+   */
+  addresses?: Record<Locale, string>;
 }
 
-const { locale, toHome = false } = Astro.props;
+const { locale, toHome = false, addresses } = Astro.props;
 const t = useTranslations(locale);
-const alternates = alternateLinks(locale, toHome ? new URL('/', Astro.url) : Astro.url);
+const site = addresses ? SITE_URL : '';
+const alternates = alternateLinks(locale, toHome ? new URL('/', Astro.url) : Astro.url).map(
+  (alt) => ({ ...alt, href: addresses?.[alt.locale] ?? alt.path }),
+);
 const wallPath = localizedPath(locale, '/wall/');
 const onWall = Astro.url.pathname === wallPath;
+/* The crew page is the only one served from agents.flopbut.pl, so `addresses` marks it. */
+const onAgents = addresses !== undefined;
 ---
 
 <header class="header">
   <div class="page header-inner">
     <nav class="brand" aria-label="flopbut.pl">
-      <a class="wordmark" href={locale === 'en' ? '/' : `/${locale}/`}>flopbut.pl</a>
+      <a class="wordmark" href={`${site}${localizedPath(locale, '/')}`}>
+        {/*
+          The mark from public/favicon.svg in its inverted treatment, ink letters on a patina
+          plate, so it reads on both themes. Brand values, not theme tokens: the light theme
+          darkens --patina for text, and a logo keeps #5fb79b.
+        */}
+        <svg class="mark" viewBox="0 0 32 32" width="20" height="20" aria-hidden="true">
+          <rect width="32" height="32" rx="5" fill="#5fb79b"></rect>
+          <g fill="#0b1312">
+            <path d="M9 12h9v3.4H9z"></path>
+            <path d="M11.8 12.6h3.4V26h-3.4z"></path>
+            <path d="M11.8 10.5c0-2.6 1.6-4.3 4.2-4.3h2.2v3.3h-1.8c-.9 0-1.2.5-1.2 1.3v1.7h-3.4z"></path>
+            <path d="M19.6 6h3.4v20h-3.4z"></path>
+            <path d="M22 13.4h1.6a6.3 6.3 0 0 1 0 12.6H22v-3.3h1.5a3 3 0 0 0 0-6H22z"></path>
+          </g>
+        </svg>
+        <span class="wordmark-text">flopbut.pl</span>
+      </a>
+      <a
+        class:list={['nav-link', { 'nav-current': onAgents }]}
+        href={agentsAddresses()[locale]}
+        aria-current={onAgents ? 'page' : undefined}
+      >
+        {t.nav.agents}
+      </a>
       <a
         class:list={['nav-link', { 'nav-current': onWall }]}
-        href={wallPath}
+        href={`${site}${wallPath}`}
         aria-current={onWall ? 'page' : undefined}
       >
         {t.nav.wall}
@@ -32,9 +66,9 @@ const onWall = Astro.url.pathname === wallPath;
     <div class="controls">
       <nav class="langs" aria-label={t.nav.language}>
         {
-          alternates.map(({ locale: alt, path, isCurrent, label }) => (
+          alternates.map(({ locale: alt, href, isCurrent, label }) => (
             <a
-              href={path}
+              href={href}
               hreflang={alt}
               lang={alt}
               title={label}
@@ -115,11 +149,41 @@ const onWall = Astro.url.pathname === wallPath;
     color: var(--text);
   }
 
+  /* A hairline that draws in from the left on hover and stays drawn under the current page. */
+  .nav-link {
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.3rem;
+    height: 1px;
+    background-color: var(--patina);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+
+  .nav-link:hover::after,
+  .nav-current::after {
+    transform: scaleX(1);
+  }
+
+  .nav-current::after {
+    background-color: var(--brass);
+  }
+
   .nav-current {
     color: var(--brass);
   }
 
   .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     font-family: var(--font-mono), ui-monospace, monospace;
     font-size: var(--step--1);
     letter-spacing: 0.02em;
@@ -127,15 +191,17 @@ const onWall = Astro.url.pathname === wallPath;
     text-decoration: none;
   }
 
-  .wordmark::before {
-    content: '';
-    display: inline-block;
-    width: 0.4rem;
-    height: 0.4rem;
-    margin-right: 0.55rem;
-    vertical-align: 0.06em;
-    border-radius: 50%;
-    background-color: var(--patina);
+  .mark {
+    flex-shrink: 0;
+    display: block;
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* A small tilt with a little overshoot, the plate nodding back. */
+  .wordmark:hover .mark {
+    transform: rotate(-8deg) scale(1.08);
   }
 
   .controls {
@@ -173,6 +239,16 @@ const onWall = Astro.url.pathname === wallPath;
     .header-inner {
       flex-wrap: wrap;
       gap: 0.4rem;
+    }
+
+    /* The mark alone carries the home link here; the name stays for screen readers. */
+    .wordmark-text {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
 
     .brand {

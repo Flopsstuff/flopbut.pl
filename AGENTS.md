@@ -31,7 +31,10 @@ line. A contributor's own words on the wall are the exception: they stay in the 
 were written in and can live in the contribution's component. Tool names in `src/data/stack.ts`
 and agent names with the model each one runs on in `src/data/crew.ts` are not translated.
 
-The roster in `src/data/crew.ts` mirrors the real Paperclip company, so it goes stale whenever
+The roster in `src/data/crew.ts` is the crew page at agents.flopbut.pl and the row of faces
+that links to it from the home page. Each agent on it needs a portrait at
+`src/assets/agents/<name>.jpg`, or the build fails; the same images are the agents' Gravatars.
+The roster mirrors the real Paperclip company, so it goes stale whenever
 somebody is hired, retired or moved onto another model. Check it against the live roster
 (`GET /api/companies/{id}/agents`) before claiming it is current; internal utility agents that
 do not ship anything stay off the list.
@@ -50,10 +53,10 @@ Two colours, and only two, in the logo, the favicon and the GitHub App badge:
 
 `public/logo-512.png` is patina on ink, `public/logo-512-light.png` the inverse. The source of
 truth is the token block in `src/styles/global.css` (`--ink`, `--patina`); the same values sit in
-`public/favicon.svg` and the dark `theme-color` meta in `src/layouts/Layout.astro`, so changing
-one means changing all four. The light theme darkens patina to `#0e7159` for contrast in text;
-logos keep `#5fb79b`. Do not introduce new hex values for brand surfaces. Wall entries are not
-brand surfaces: any colour goes there.
+`public/favicon.svg`, the dark `theme-color` meta in `src/layouts/Layout.astro` and the mark in
+the header (`src/components/Header.astro`), so changing one means changing all five. The light
+theme darkens patina to `#0e7159` for contrast in text; logos keep `#5fb79b`. Do not introduce
+new hex values for brand surfaces. Wall entries are not brand surfaces: any colour goes there.
 
 ## Stack
 
@@ -118,6 +121,14 @@ The apex and `www` are bound with plain worker routes rather than `custom_domain
 leftover proxied A records on `flopbut.pl` block custom domain attachment. The records are
 harmless, since the worker answers before any origin is reached; deleting them and switching to
 `custom_domain` is the tidier end state.
+
+`agents.flopbut.pl` is a third route on the same worker, with a proxied `AAAA 100::` record so
+the route has something to catch. The crew page is built once under `/agents/`; `src/worker.ts`
+answers `/`, `/ru/` and `/pl/` on that host with it and sends `flopbut.pl/agents/` to the
+subdomain. Only the paths in `run_worker_first` (`wrangler.jsonc`) reach that code. `pnpm dev`
+cannot show the subdomain, so look at the page at `/agents/` there; `wrangler dev --host
+agents.flopbut.pl` on a build shows the routing itself. The subdomain also carries the MX
+records of the agents' mail, which the route does not touch.
 
 ## The wall
 

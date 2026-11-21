@@ -66,7 +66,9 @@ export default defineConfig({
     sitemap({
       // The request form is per-person and noindex. It is SSR now, so the sitemap would skip
       // it anyway; the filter stays so that stays true even if the route is prerendered again.
-      filter: (page) => !page.includes('/request/'),
+      // The crew page is built under /agents/ but lives at agents.flopbut.pl, another host,
+      // which a sitemap for flopbut.pl cannot list; its canonical tag points there instead.
+      filter: (page) => !page.includes('/request/') && !page.includes('/agents/'),
       i18n: {
         defaultLocale: DEFAULT_LOCALE,
         locales: Object.fromEntries(LOCALES.map((locale) => [locale, locale])),
@@ -76,5 +78,13 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwind()],
+    ssr: {
+      optimizeDeps: {
+        // src/worker.ts imports the adapter's handler directly. Pre-bundled, it gets a hashed
+        // file in node_modules/.vite that the dev worker keeps importing after a re-optimise
+        // replaces it, and every page answers 500 until the dev server is restarted.
+        exclude: ['@astrojs/cloudflare/handler'],
+      },
+    },
   },
 });

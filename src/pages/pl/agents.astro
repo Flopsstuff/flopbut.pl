@@ -1,0 +1,21 @@
+---
+import { getImage } from 'astro:assets';
+import Agents from '../../components/Agents.astro';
+import { AGENTS_URL } from '../../config.ts';
+import { sharedPortrait } from '../../data/portraits.ts';
+import { agentsAddresses, useTranslations } from '../../i18n/utils.ts';
+import Layout from '../../layouts/Layout.astro';
+
+const t = useTranslations('pl');
+const share = await getImage({ src: sharedPortrait, width: 600, height: 600, format: 'jpg' });
+---
+
+<Layout
+  locale="pl"
+  title={t.agents.meta.title}
+  description={t.agents.meta.description}
+  addresses={agentsAddresses()}
+  image={{ url: new URL(share.src, AGENTS_URL).href, alt: t.crew.title }}
+>
+  <Agents locale="pl" />
+</Layout>

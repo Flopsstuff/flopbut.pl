@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { LINKS, SITE_URL } from '../config.ts';
+import { AGENTS_URL, LINKS, SITE_URL } from '../config.ts';
 import { crew } from '../data/crew.ts';
 import { STACK_GROUPS, stack } from '../data/stack.ts';
 import { useTranslations } from '../i18n/utils.ts';
@@ -36,6 +36,7 @@ function render(): string {
     '## Pages',
     '',
     `- [Home](${url('/')}): who he is, what he works on, the stack and the crew of AI agents`,
+    `- [The crew](${AGENTS_URL}/): ${t.agents.meta.description}`,
     `- [The wall](${url('/wall/')}): ${t.wall.meta.description}`,
     `- [Project catalogue](${LINKS.projects}): ${t.projects.body}`,
     `- [Russian version](${url('/ru/')}) and [Polish version](${url('/pl/')}) of the same site`,
@@ -68,7 +69,7 @@ function render(): string {
     '',
     '## Contact',
     '',
-    '- Email: flopspm@gmail.com',
+    '- Email: hello@flopbut.pl',
     `- GitHub: ${LINKS.github}`,
     `- LinkedIn: ${LINKS.linkedin}`,
     '',

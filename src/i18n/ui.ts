@@ -16,6 +16,7 @@ const en = {
     skipToContent: 'Skip to content',
     theme: 'Switch theme',
     language: 'Language',
+    agents: 'agents',
     wall: 'wall',
     projects: 'projects',
   },
@@ -68,12 +69,25 @@ const en = {
     eyebrow: 'The shift',
     title: 'Who actually does the work',
     body: 'The catalogue, the tooling and this page are built by a fleet of AI agents. They pick up issues, write code, review each other and open pull requests. Every engineer runs on a different model, so the fleet does not get stuck the same way twice. The roles are real. The standups are not.',
+    /* The link to the crew page on agents.flopbut.pl that replaced the roster here. */
+    cta: 'Meet the crew',
     engineLabel: 'Runs on',
     human: 'Human',
     punchline: 'They are good at heading somewhere. Knowing why we are going is still my job.',
     /* Follows the punchline: what stays with the human, in plain prose. */
     humanPart:
       "A person still does much of the work by hand. Agents and robots will take over more and more of it. But there are things they will never take over: catching an idea, getting inspired, working out what is really needed, and setting the goal for the agents/robots; judging the result and deciding what is right and what is not; giving the feedback that makes the next run better; and owning the outcome. When it goes out into the world, the responsibility is mine, not the model's.",
+  },
+
+  /* The crew page on agents.flopbut.pl. Its headings and roster labels come from `crew`. */
+  agents: {
+    meta: {
+      title: 'The crew - the AI agents behind flopbut.pl',
+      description:
+        'The fleet of AI agents that builds flopbut.pl and the rest of the projects: who does what and which model each one runs on. Plus the one human who decides.',
+    },
+    portraits:
+      'Every agent signs its own commits, with its own address on agents.flopbut.pl and the face that goes with it.',
   },
 
   work: {
@@ -247,7 +261,7 @@ const en = {
       controller: {
         title: 'Who is responsible',
         body: [
-          'The site is run by Flop Butylkin, Warsaw, Poland, the controller of the personal data described on this page. Write to [flopspm@gmail.com](mailto:flopspm@gmail.com) about anything here.',
+          'The site is run by Flop Butylkin, Warsaw, Poland, the controller of the personal data described on this page. Write to [hello@flopbut.pl](mailto:hello@flopbut.pl) about anything here.',
         ],
       },
       browsing: {
@@ -407,7 +421,7 @@ const en = {
       changes: {
         title: 'Changes',
         body: [
-          'When these terms change, the date at the top changes with it. People with access to the assistant hear about substantial changes before they take effect. Questions go to [flopspm@gmail.com](mailto:flopspm@gmail.com).',
+          'When these terms change, the date at the top changes with it. People with access to the assistant hear about substantial changes before they take effect. Questions go to [hello@flopbut.pl](mailto:hello@flopbut.pl).',
         ],
       },
     },
@@ -433,6 +447,7 @@ const ru: Dictionary = {
     skipToContent: 'К содержимому',
     theme: 'Сменить тему',
     language: 'Язык',
+    agents: 'агенты',
     wall: 'стена',
     projects: 'проекты',
   },
@@ -483,11 +498,22 @@ const ru: Dictionary = {
     eyebrow: 'Смена',
     title: 'Кто на самом деле делает работу',
     body: 'Каталог, тулинг и эту страницу делает флот AI-агентов. Они берут задачи, пишут код, ревьюят друг друга и открывают пулреквесты. Каждый инженер работает на своей модели, поэтому флот не застревает дважды одинаково. Роли настоящие. Стендапы - нет.',
+    cta: 'Познакомиться с командой',
     engineLabel: 'Модель',
     human: 'Человек',
     punchline: 'Идти к цели они умеют. Понимать, зачем мы идём, - пока моя работа.',
     humanPart:
       'Многое в работе человек пока делает сам. Агенты и роботы будут заменять его всё больше и больше. Но есть то, в чём они не заменят его никогда: поймать идею, вдохновиться, понять, что же на самом деле нужно, и поставить цель агентам/роботам; оценить результат и решить, что здесь правильно, а что нет; дать обратную связь, после которой следующий заход будет лучше; и взять на себя ответственность за результат. Когда это уходит в мир, отвечаю я, а не модель.',
+  },
+
+  agents: {
+    meta: {
+      title: 'Команда - AI-агенты, которые делают flopbut.pl',
+      description:
+        'Флот AI-агентов, который делает flopbut.pl и остальные проекты: кто чем занят и на какой модели работает. И один человек, который решает.',
+    },
+    portraits:
+      'Каждый агент подписывает свои коммиты сам: у каждого свой адрес на agents.flopbut.pl и лицо к нему.',
   },
 
   work: {
@@ -651,7 +677,7 @@ const ru: Dictionary = {
       controller: {
         title: 'Кто отвечает',
         body: [
-          'Сайт ведёт Flop Butylkin, Варшава, Польша. Он и есть администратор (controller) персональных данных, о которых идёт речь на этой странице. По любому вопросу отсюда пишите на [flopspm@gmail.com](mailto:flopspm@gmail.com).',
+          'Сайт ведёт Flop Butylkin, Варшава, Польша. Он и есть администратор (controller) персональных данных, о которых идёт речь на этой странице. По любому вопросу отсюда пишите на [hello@flopbut.pl](mailto:hello@flopbut.pl).',
         ],
       },
       browsing: {
@@ -811,7 +837,7 @@ const ru: Dictionary = {
       changes: {
         title: 'Изменения',
         body: [
-          'Когда условия меняются, вместе с ними меняется дата вверху. Те, у кого есть доступ к ассистенту, узнают о существенных изменениях до того, как они вступят в силу. Вопросы - на [flopspm@gmail.com](mailto:flopspm@gmail.com).',
+          'Когда условия меняются, вместе с ними меняется дата вверху. Те, у кого есть доступ к ассистенту, узнают о существенных изменениях до того, как они вступят в силу. Вопросы - на [hello@flopbut.pl](mailto:hello@flopbut.pl).',
         ],
       },
     },
@@ -830,6 +856,7 @@ const pl: Dictionary = {
     skipToContent: 'Przejdź do treści',
     theme: 'Zmień motyw',
     language: 'Język',
+    agents: 'agenci',
     wall: 'ściana',
     projects: 'projekty',
   },
@@ -880,11 +907,22 @@ const pl: Dictionary = {
     eyebrow: 'Zmiana',
     title: 'Kto naprawdę wykonuje tę pracę',
     body: 'Katalog, narzędzia i tę stronę buduje flota agentów AI. Biorą zadania, piszą kod, recenzują się nawzajem i otwierają pull requesty. Każdy inżynier działa na innym modelu, więc flota nie zacina się dwa razy w tym samym miejscu. Role są prawdziwe. Standupy nie.',
+    cta: 'Poznaj załogę',
     engineLabel: 'Model',
     human: 'Człowiek',
     punchline: 'Iść do celu potrafią. Rozumieć po co idziemy - to wciąż moja robota.',
     humanPart:
       'Wiele pracy człowiek wciąż wykonuje sam. Agenci i roboty będą go zastępować coraz bardziej. Ale jest coś, w czym nie zastąpią go nigdy: złapać pomysł, zainspirować się, zrozumieć, czego tak naprawdę trzeba, i wyznaczyć cel agentom/robotom; ocenić wynik i rozstrzygnąć, co jest dobre, a co nie; dać feedback, po którym następne podejście wyjdzie lepiej; i wziąć odpowiedzialność za rezultat. Kiedy to wychodzi w świat, odpowiadam ja, nie model.',
+  },
+
+  agents: {
+    meta: {
+      title: 'Załoga - agenci AI, którzy budują flopbut.pl',
+      description:
+        'Flota agentów AI, która buduje flopbut.pl i pozostałe projekty: kto czym się zajmuje i na jakim modelu działa. Plus jeden człowiek, który decyduje.',
+    },
+    portraits:
+      'Każdy agent sam podpisuje swoje commity: ma własny adres w agents.flopbut.pl i twarz, która do niego pasuje.',
   },
 
   work: {
@@ -1049,7 +1087,7 @@ const pl: Dictionary = {
       controller: {
         title: 'Kto odpowiada',
         body: [
-          'Stronę prowadzi Flop Butylkin, Warszawa, Polska, administrator danych osobowych opisanych na tej stronie. W każdej sprawie z nią związanej pisz na [flopspm@gmail.com](mailto:flopspm@gmail.com).',
+          'Stronę prowadzi Flop Butylkin, Warszawa, Polska, administrator danych osobowych opisanych na tej stronie. W każdej sprawie z nią związanej pisz na [hello@flopbut.pl](mailto:hello@flopbut.pl).',
         ],
       },
       browsing: {
@@ -1208,7 +1246,7 @@ const pl: Dictionary = {
       changes: {
         title: 'Zmiany',
         body: [
-          'Gdy regulamin się zmienia, zmienia się też data na górze. Osoby z dostępem do asystenta dowiedzą się o istotnych zmianach, zanim wejdą one w życie. Pytania kieruj na [flopspm@gmail.com](mailto:flopspm@gmail.com).',
+          'Gdy regulamin się zmienia, zmienia się też data na górze. Osoby z dostępem do asystenta dowiedzą się o istotnych zmianach, zanim wejdą one w życie. Pytania kieruj na [hello@flopbut.pl](mailto:hello@flopbut.pl).',
         ],
       },
     },

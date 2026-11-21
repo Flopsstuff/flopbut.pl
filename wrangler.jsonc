@@ -2,9 +2,10 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "flopbut-pl",
 
-  // Unified Astro entrypoint. Static pages are served straight from assets;
-  // this worker only runs for routes that opted out of prerendering.
-  "main": "@astrojs/cloudflare/entrypoints/server",
+  // Astro's handler wrapped in a few lines that serve the crew page on agents.flopbut.pl.
+  // Static pages are served straight from assets; the worker runs for routes that opted
+  // out of prerendering and for the paths in `run_worker_first` below.
+  "main": "./src/worker.ts",
   "compatibility_date": "2026-08-08",
   "compatibility_flags": ["nodejs_compat"],
 
@@ -13,7 +14,11 @@
   // rather than this file, so treat the path below as documentation of the same layout.
   "assets": {
     "directory": "./dist/client",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
+    // The roots of each locale and the crew page under them. On agents.flopbut.pl the worker
+    // answers the roots with the crew page; elsewhere it sends /agents/ to the subdomain.
+    // Every other path stays a plain asset request with no worker invocation.
+    "run_worker_first": ["/", "/ru/", "/pl/", "/agents/", "/ru/agents/", "/pl/agents/"]
   },
 
   "observability": {
@@ -32,6 +37,10 @@
   // serving both hostnames does not create a duplicate in search results.
   "routes": [
     { "pattern": "flopbut.pl/*", "zone_name": "flopbut.pl" },
-    { "pattern": "www.flopbut.pl/*", "zone_name": "flopbut.pl" }
+    { "pattern": "www.flopbut.pl/*", "zone_name": "flopbut.pl" },
+    // The crew page. Its DNS record is a proxied AAAA 100:: placeholder: the worker answers
+    // before any origin would be contacted. The subdomain also carries MX records for the
+    // agents' mail, which this route does not touch.
+    { "pattern": "agents.flopbut.pl/*", "zone_name": "flopbut.pl" }
   ]
 }
