@@ -69,7 +69,7 @@ function render(): string {
     '',
     '## Contact',
     '',
-    '- Email: flopspm@gmail.com',
+    '- Email: hello@flopbut.pl',
     `- GitHub: ${LINKS.github}`,
     `- LinkedIn: ${LINKS.linkedin}`,
     '',

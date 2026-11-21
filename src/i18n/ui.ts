@@ -16,6 +16,7 @@ const en = {
     skipToContent: 'Skip to content',
     theme: 'Switch theme',
     language: 'Language',
+    agents: 'agents',
     wall: 'wall',
     projects: 'projects',
   },
@@ -260,7 +261,7 @@ const en = {
       controller: {
         title: 'Who is responsible',
         body: [
-          'The site is run by Flop Butylkin, Warsaw, Poland, the controller of the personal data described on this page. Write to [flopspm@gmail.com](mailto:flopspm@gmail.com) about anything here.',
+          'The site is run by Flop Butylkin, Warsaw, Poland, the controller of the personal data described on this page. Write to [hello@flopbut.pl](mailto:hello@flopbut.pl) about anything here.',
         ],
       },
       browsing: {
@@ -420,7 +421,7 @@ const en = {
       changes: {
         title: 'Changes',
         body: [
-          'When these terms change, the date at the top changes with it. People with access to the assistant hear about substantial changes before they take effect. Questions go to [flopspm@gmail.com](mailto:flopspm@gmail.com).',
+          'When these terms change, the date at the top changes with it. People with access to the assistant hear about substantial changes before they take effect. Questions go to [hello@flopbut.pl](mailto:hello@flopbut.pl).',
         ],
       },
     },
@@ -446,6 +447,7 @@ const ru: Dictionary = {
     skipToContent: 'К содержимому',
     theme: 'Сменить тему',
     language: 'Язык',
+    agents: 'агенты',
     wall: 'стена',
     projects: 'проекты',
   },
@@ -675,7 +677,7 @@ const ru: Dictionary = {
       controller: {
         title: 'Кто отвечает',
         body: [
-          'Сайт ведёт Flop Butylkin, Варшава, Польша. Он и есть администратор (controller) персональных данных, о которых идёт речь на этой странице. По любому вопросу отсюда пишите на [flopspm@gmail.com](mailto:flopspm@gmail.com).',
+          'Сайт ведёт Flop Butylkin, Варшава, Польша. Он и есть администратор (controller) персональных данных, о которых идёт речь на этой странице. По любому вопросу отсюда пишите на [hello@flopbut.pl](mailto:hello@flopbut.pl).',
         ],
       },
       browsing: {
@@ -835,7 +837,7 @@ const ru: Dictionary = {
       changes: {
         title: 'Изменения',
         body: [
-          'Когда условия меняются, вместе с ними меняется дата вверху. Те, у кого есть доступ к ассистенту, узнают о существенных изменениях до того, как они вступят в силу. Вопросы - на [flopspm@gmail.com](mailto:flopspm@gmail.com).',
+          'Когда условия меняются, вместе с ними меняется дата вверху. Те, у кого есть доступ к ассистенту, узнают о существенных изменениях до того, как они вступят в силу. Вопросы - на [hello@flopbut.pl](mailto:hello@flopbut.pl).',
         ],
       },
     },
@@ -854,6 +856,7 @@ const pl: Dictionary = {
     skipToContent: 'Przejdź do treści',
     theme: 'Zmień motyw',
     language: 'Język',
+    agents: 'agenci',
     wall: 'ściana',
     projects: 'projekty',
   },
@@ -1084,7 +1087,7 @@ const pl: Dictionary = {
       controller: {
         title: 'Kto odpowiada',
         body: [
-          'Stronę prowadzi Flop Butylkin, Warszawa, Polska, administrator danych osobowych opisanych na tej stronie. W każdej sprawie z nią związanej pisz na [flopspm@gmail.com](mailto:flopspm@gmail.com).',
+          'Stronę prowadzi Flop Butylkin, Warszawa, Polska, administrator danych osobowych opisanych na tej stronie. W każdej sprawie z nią związanej pisz na [hello@flopbut.pl](mailto:hello@flopbut.pl).',
         ],
       },
       browsing: {
@@ -1243,7 +1246,7 @@ const pl: Dictionary = {
       changes: {
         title: 'Zmiany',
         body: [
-          'Gdy regulamin się zmienia, zmienia się też data na górze. Osoby z dostępem do asystenta dowiedzą się o istotnych zmianach, zanim wejdą one w życie. Pytania kieruj na [flopspm@gmail.com](mailto:flopspm@gmail.com).',
+          'Gdy regulamin się zmienia, zmienia się też data na górze. Osoby z dostępem do asystenta dowiedzą się o istotnych zmianach, zanim wejdą one w życie. Pytania kieruj na [hello@flopbut.pl](mailto:hello@flopbut.pl).',
         ],
       },
     },

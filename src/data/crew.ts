@@ -59,7 +59,7 @@ export const crew: CrewMember[] = [
   {
     name: 'Vesper',
     role: { en: 'Engineering', ru: 'Инженер', pl: 'Inżynier' },
-    engine: 'Grok 4.6',
+    engine: 'Grok 4.7',
   },
   {
     name: 'Robert',

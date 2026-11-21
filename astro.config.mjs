@@ -78,5 +78,13 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwind()],
+    ssr: {
+      optimizeDeps: {
+        // src/worker.ts imports the adapter's handler directly. Pre-bundled, it gets a hashed
+        // file in node_modules/.vite that the dev worker keeps importing after a re-optimise
+        // replaces it, and every page answers 500 until the dev server is restarted.
+        exclude: ['@astrojs/cloudflare/handler'],
+      },
+    },
   },
 });

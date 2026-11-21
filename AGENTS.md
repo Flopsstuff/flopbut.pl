@@ -53,10 +53,10 @@ Two colours, and only two, in the logo, the favicon and the GitHub App badge:
 
 `public/logo-512.png` is patina on ink, `public/logo-512-light.png` the inverse. The source of
 truth is the token block in `src/styles/global.css` (`--ink`, `--patina`); the same values sit in
-`public/favicon.svg` and the dark `theme-color` meta in `src/layouts/Layout.astro`, so changing
-one means changing all four. The light theme darkens patina to `#0e7159` for contrast in text;
-logos keep `#5fb79b`. Do not introduce new hex values for brand surfaces. Wall entries are not
-brand surfaces: any colour goes there.
+`public/favicon.svg`, the dark `theme-color` meta in `src/layouts/Layout.astro` and the mark in
+the header (`src/components/Header.astro`), so changing one means changing all five. The light
+theme darkens patina to `#0e7159` for contrast in text; logos keep `#5fb79b`. Do not introduce
+new hex values for brand surfaces. Wall entries are not brand surfaces: any colour goes there.
 
 ## Stack
 
